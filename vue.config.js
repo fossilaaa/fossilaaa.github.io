@@ -1,6 +1,7 @@
 module.exports = {
     devServer: {
         port: 9000,
+        disableHostCheck: true,
         before(app, server) {
             app.get('/123', (req, res) => {
                 res.json({
