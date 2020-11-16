@@ -1,9 +1,7 @@
 <template>
-    <Layout>
-        <Content>
-            <Input></Input>
-        </Content>
-    </Layout>
+    <div>
+        <mavon-editor v-model="blogContent"></mavon-editor>
+    </div>
 </template>
 
 <script>
@@ -11,7 +9,7 @@
         name: "AddBlog",
         data(){
             return {
-                content: ''
+                blogContent: ''
             }
         }
     }
