@@ -24,9 +24,35 @@ const routes = [
         path: '/addblog',
         name: 'AddBlog',
         component: () => import('../views/AddBlog'),
-        meta:{
+        meta: {
             requireAuth: true
         }
+    },
+    {
+        path: '/blog',
+        name: 'Blog',
+        component: () => import('../views/Blog')
+    },
+    {
+        path: '/myinfo',
+        name: 'MyInfo',
+        component: () => import('../views/MyInfo.vue'),
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '/home',
+        name: 'Home',
+        component: () => import('../views/Home'),
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '*',
+        name: 'Other',
+        component: () => import('../views/404Error.vue')
     }
 ]
 
@@ -37,8 +63,8 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if(to.matched.some(record=>record.meta.requireAuth)){
-        if(!localStorage.getItem('user')){
+    if (to.matched.some(record => record.meta.requireAuth)) {
+        if (!localStorage.getItem('user')) {
             alert(to.fullPath);
             next({
                 path: '/login',
@@ -46,7 +72,7 @@ router.beforeEach((to, from, next) => {
                     redirect: to.fullPath
                 }
             })
-        }else {
+        } else {
             next()
         }
     }

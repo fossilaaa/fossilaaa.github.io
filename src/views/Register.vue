@@ -87,7 +87,7 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$axios({
-                            url: '/register',
+                            url: '/api/v1/register',
                             method: 'POST',
                             data: {
                                 userPhone: this.formInline.userPhone,

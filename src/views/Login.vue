@@ -72,7 +72,7 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$axios({
-                            url: '/login',
+                            url: '/api/v1/logintest',
                             method: 'POST',
                             data: this.formInline
                         }).then(res => {

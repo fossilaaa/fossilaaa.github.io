@@ -56,12 +56,19 @@
             <Sider hide-trigger style="margin-left: 5%; min-width: 25%">
                 <!--                个人信息卡片-->
                 <Card>
-                    <p>你好 {{ user.username }}</p>
-                    <div style="margin-top: 10%">
-                        <Badge dot>
-                            <a href="#" class="demo-badge"></a>
-                        </Badge>
-                    </div>
+                    <p slot="title">
+                        <Icon type="md-book" />
+                        博客信息
+                    </p>
+                    <span slot="extra">
+                        {{user.userName}}
+                    </span>
+                    <ul>
+                        <li v-for="(item, index) in blogInfo" :key="index" style="list-style: none">
+                            <span>{{item.info}}</span>
+                            <span style="float: right">{{item.data}}</span>
+                        </li>
+                    </ul>
                 </Card>
                 <Divider/>
                 <!--                推荐作者卡片-->
@@ -75,7 +82,7 @@
                         换一换
                     </a>
                     <ul>
-                        <li v-for="item in randomMovieList" style="list-style: none">
+                        <li v-for="(item, index) in randomMovieList" :key="index" style="list-style: none">
                             <a :href="item.url" target="_blank">{{ item.name }}</a>
                             <span style="float: right">{{ item.rate }}喜欢</span>
                         </li>
@@ -119,6 +126,8 @@
 <script>
     import Head from '../components/Header';
     import Foot from '../components/Footer';
+
+    import {mapState} from 'vuex'
 
     export default {
         name: "Index",
@@ -237,12 +246,21 @@
                     'magenta',
                     'warning',
                     'red'
+                ],
+                blogInfo: [
+                    {info: "文章数目",data: 123},
+                    {info: "评论数目", data: 34},
+                    {info: "访客总数", data: 3345},
+                    {info: "来到Buble", data: "1年330天"}
                 ]
             }
         },
         components: {
             Head,
             Foot
+        },
+        computed: {
+            ...mapState(['user', 'userToken'])
         },
         methods: {
             changeLimit() {
