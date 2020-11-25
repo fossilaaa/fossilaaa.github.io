@@ -20,7 +20,7 @@ module.exports = {
                         ]
                     })
                 }),
-                app.post('/api/v1/logintest', (req, res) => {
+                app.post('/api/v1/login', (req, res) => {
                     res.json(data = {
                         status: {
                             code: 200,
