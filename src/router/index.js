@@ -29,7 +29,7 @@ const routes = [
         }
     },
     {
-        path: '/blog',
+        path: '/blog/:blogId',
         name: 'Blog',
         component: () => import('../views/Blog')
     },
@@ -48,6 +48,11 @@ const routes = [
         meta: {
             requireAuth: true
         }
+    },
+    {
+        path: '/userhome/:userId',
+        name: 'UserHome',
+        component: () => import('../views/UserHome')
     },
     {
         path: '*',

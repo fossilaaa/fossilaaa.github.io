@@ -74,7 +74,10 @@
                         this.$axios({
                             url: '/api/v1/logintest',
                             method: 'POST',
-                            data: this.formInline
+                            data: {
+                                userName: this.formInline.userName,
+                                userPassword: this.formInline.userPassword
+                            }
                         }).then(res => {
                             if (res.data.status.code === 200) {
                                 // 通过vuex设置用户登陆状态记录和用户认证

@@ -19,7 +19,7 @@
                         :src="user.userAvatar"
                         size="large"/>
             </template>
-            <MenuItem name="3-1">
+            <MenuItem name="3-1" to="/home">
                 <Icon type="md-home"/>
                 我的主页
             </MenuItem>

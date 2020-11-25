@@ -5,15 +5,14 @@
         </Header>
         <Content>
             <button @click="uploadImgs">保存图片</button><button @click="modal = true">写完</button>
-            <mavon-editor ref="md" @imgAdd="addImg" @imgDel="delImg" @save="saveBlog"></mavon-editor>
+            <mavon-editor ref="md" @imgAdd="addImg" @imgDel="delImg" @save="saveBlog" style="z-index: 0"></mavon-editor>
         </Content>
         <Modal
                 v-model="modal"
-                title="Title"
-                :loading="loading"
-                @on-ok="asyncOK"
-        style="position:fixed;">
-            <p>After you click ok, the dialog box will close in 2 seconds.</p>
+                title="选择博客属性"
+                @on-ok="uploadBlog"
+        style="z-index: 1">
+            <p>确定发表？</p>
         </Modal>
     </Layout>
 </template>
@@ -24,7 +23,8 @@
         data() {
             return {
                 // md编辑器属性
-                mdContent: '', // 内容，纯文本
+                mdContent: '', // markdown格式内容，纯文本
+                htmlContent: '', // html格式内容，纯文本
                 imgFiles: {},  // imgFiles是一个{位置: 图片文件}格式的字典
 
                 // 博客信息选择对话框
@@ -33,20 +33,6 @@
             }
         },
         methods: {
-            // 获取文章
-            // getBlog() {
-            //     this.$axios({
-            //         url: '/api/v1/blog',
-            //         method: 'GET',
-            //         params: {
-            //             blogId: 1
-            //         }
-            //     }).then(response => {
-            //         this.content = response.content;
-            //     }).catch(error => {
-            //         alert("请求失败")
-            //     })
-            // },
             // 绑定@imgAdd event
             addImg(pos, file) {
                 // 缓存图片信息
@@ -84,6 +70,7 @@
             saveBlog() {
                 // 再生成纯文本信息保存
                 this.mdContent = this.$refs.md.d_value;
+                this.htmlContent = this.$refs.md.d_render;
                 if (this.mdContent.length === 0) {
                     alert("请填写")
                     return;
@@ -91,17 +78,22 @@
                 this.$axios({
                     url: '/api/v1/blog',
                     method: 'POST',
-                    data: JSON.stringify({'markdown': this.mdContent}),
-                }).then(response => {
-                    if (response.data > 0) {
-                        alert("成功")
-                    } else {
-                        alert("失败")
+                    data: JSON.stringify({'mdContent': this.mdContent, 'htmlContent': this.htmlContent}),
+                }).then(res => {
+                    if (res.data.status.code === 200){
+                        this.$Message.success("保存成功");
+                    }else{
+                        alert(res.data.status.msg);
                     }
+                }).catch(error=>{
+                    alert(error);
                 })
             },
             chooseBlogAttr(){
                 this.modal = true;
+            },
+            uploadBlog(){
+
             }
         },
         beforeRouteLeave(to, from, next) {

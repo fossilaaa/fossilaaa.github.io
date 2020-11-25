@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        user: localStorage.getItem('user') ? localStorage.getItem('user') : null,
+        user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '',
         userToken: localStorage.getItem('userToken') ? localStorage.getItem('UserToken') : ''
     },
     mutations: {
@@ -13,7 +13,7 @@ export default new Vuex.Store({
         changeLogin(state, {user, userToken}) {
             state.user = user;
             state.userToken = userToken;
-            localStorage.setItem('user', user);
+            localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('userToken', userToken);
         },
         //用户登出，清除用户信息和token

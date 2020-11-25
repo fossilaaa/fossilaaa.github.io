@@ -55,18 +55,18 @@
             <!--            侧边栏-->
             <Sider hide-trigger style="margin-left: 5%; min-width: 25%">
                 <!--                个人信息卡片-->
-                <Card>
+                <Card v-if="user">
                     <p slot="title">
-                        <Icon type="md-book" />
+                        <Icon type="md-book"/>
                         博客信息
                     </p>
                     <span slot="extra">
                         {{user.userName}}
                     </span>
                     <ul>
-                        <li v-for="(item, index) in blogInfo" :key="index" style="list-style: none">
+                        <li v-for="(item, index) in userBlogDetailsInfo" :key="index" style="list-style: none">
                             <span>{{item.info}}</span>
-                            <span style="float: right">{{item.data}}</span>
+                            <span style="float: right">{{item.value}}</span>
                         </li>
                     </ul>
                 </Card>
@@ -82,9 +82,9 @@
                         换一换
                     </a>
                     <ul>
-                        <li v-for="(item, index) in randomMovieList" :key="index" style="list-style: none">
-                            <a :href="item.url" target="_blank">{{ item.name }}</a>
-                            <span style="float: right">{{ item.rate }}喜欢</span>
+                        <li v-for="(user, index) in randomRecommendedUsers" :key="index" style="list-style: none">
+                            <router-link :to="{name: 'UserHome', params:{userId: user.userId}}">{{ user.userName }}</router-link>
+                            <span style="float: right">{{ user.userCollectionsCount }}收藏</span>
                         </li>
                     </ul>
                 </Card>
@@ -114,6 +114,7 @@
                     <Tag color="purple">purple</Tag>
                     <Tag color="#FFA2D3">Custom Color</Tag>
                 </Card>
+                <BackTop></BackTop>
             </Sider>
         </Layout>
         <!--        底部栏-->
@@ -133,6 +134,9 @@
         name: "Index",
         data() {
             return {
+                recommendedUsers: [],
+                randomRecommendedUsers: [],
+                userBlogDetailsInfo: [],
                 data: [
                     {
                         title: 'This is title 1',
@@ -171,59 +175,6 @@
                         content: 'This is the content, this is the content, this is the content, this is the content.'
                     }
                 ],
-                movieList: [
-                    {
-                        name: '张三',
-                        url: 'https://movie.douban.com/subject/1292052/',
-                        rate: 9.6
-                    },
-                    {
-                        name: '李四',
-                        url: 'https://movie.douban.com/subject/1295644/',
-                        rate: 9.4
-                    },
-                    {
-                        name: '王五',
-                        url: 'https://movie.douban.com/subject/1291546/',
-                        rate: 9.5
-                    },
-                    {
-                        name: '马六',
-                        url: 'https://movie.douban.com/subject/1292720/',
-                        rate: 9.4
-                    },
-                    {
-                        name: '李华',
-                        url: 'https://movie.douban.com/subject/1292063/',
-                        rate: 9.5
-                    },
-                    {
-                        name: 'Spirited Away',
-                        url: 'https://movie.douban.com/subject/1291561/',
-                        rate: 9.2
-                    },
-                    {
-                        name: '马龙',
-                        url: 'https://movie.douban.com/subject/1295124/',
-                        rate: 9.4
-                    },
-                    {
-                        name: '吴华',
-                        url: 'https://movie.douban.com/subject/1292001/',
-                        rate: 9.2
-                    },
-                    {
-                        name: '阿萨',
-                        url: 'https://movie.douban.com/subject/2131459/',
-                        rate: 9.3
-                    },
-                    {
-                        name: '郑芊',
-                        url: 'https://movie.douban.com/subject/3541415/',
-                        rate: 9.2
-                    }
-                ],
-                randomMovieList: [],
                 user: {
                     username: 'gaoi',
                     article_total: 30,
@@ -247,22 +198,44 @@
                     'warning',
                     'red'
                 ],
-                blogInfo: [
-                    {info: "文章数目",data: 123},
-                    {info: "评论数目", data: 34},
-                    {info: "访客总数", data: 3345},
-                    {info: "来到Buble", data: "1年330天"}
-                ]
             }
+        },
+        computed: {
+            ...mapState(['user', 'userToken'])
         },
         components: {
             Head,
             Foot
         },
-        computed: {
-            ...mapState(['user', 'userToken'])
-        },
         methods: {
+            getRecommendedUsers() {
+                this.$axios({
+                    url: '/api/v1/recommendedusers',
+                    method: 'GET',
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.recommendedUsers = res.data.data;
+                    } else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error => {
+                    alert(error);
+                })
+            },
+            getUserBlogDetailsInfo() {
+                this.$axios({
+                    url: '/api/v1/userblogdetailsinfo/' + JSON.parse(localStorage.getItem('user')).userId,
+                    method: 'GET',
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.userBlogDetailsInfo = res.data.data;
+                    } else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error => {
+                    alert(error);
+                })
+            },
             changeLimit() {
                 function getArrayItems(arr, num) {
                     const temp_array = [];
@@ -281,12 +254,16 @@
                     }
                     return return_array;
                 }
-
-                this.randomMovieList = getArrayItems(this.movieList, 5);
+                this.randomRecommendedUsers = getArrayItems(this.recommendedUsers, 5);
+                console.log(this.randomRecommendedUsers);
             }
         },
-        mounted() {
+        created() {
+            this.$Loading.start();
+            this.getUserBlogDetailsInfo();
+            this.getRecommendedUsers();
             this.changeLimit();
+            this.$Loading.finish();
         }
     }
 </script>
