@@ -81,7 +81,7 @@
             },
             getBlog(){
                 this.$axios({
-                    url: '/api/v1/blog/' + this.blogId,
+                    url: '/api/blog/' + this.blogId,
                     method: 'GET',
                 }).then(res=>{
                     if (res.data.status.code === 200){
@@ -95,7 +95,7 @@
             },
             getBlogComments(){
                 this.$axios({
-                    url: '/api/v1/comments/' + this.blogId,
+                    url: '/api/comments/' + this.blogId,
                     method: 'GET',
                 }).then(res=>{
                     if (res.data.status.code === 200) {

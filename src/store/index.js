@@ -17,7 +17,7 @@ export default new Vuex.Store({
             localStorage.setItem('userToken', userToken);
         },
         //用户登出，清除用户信息和token
-        changeLogout(state){
+        changeLogout(state) {
             state.user = null;
             state.userToken = '';
             localStorage.removeItem('user');
@@ -26,11 +26,11 @@ export default new Vuex.Store({
     },
     actions: {
         //用户登录
-        changeLogin({commit}, {user, userToken}){
+        changeLogin({commit}, {user, userToken}) {
             commit('changeLogin', {user: user, userToken: userToken});
         },
         //用户登出
-        changeLogout({commit}){
+        changeLogout({commit}) {
             commit('changeLogout');
         }
     },

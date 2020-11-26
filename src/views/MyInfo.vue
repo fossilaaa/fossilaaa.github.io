@@ -54,7 +54,7 @@
         methods:{
             getInfo(){
                 this.$axios({
-                    url: '/api/v1/myinfo',
+                    url: '/api/myinfo',
                     method: 'GET',
                     // params: {
                     //     userId: localStorage.getItem(user.userId)
@@ -70,7 +70,7 @@
             },
             saveInfo(){
                 this.$axios({
-                    url: '/api/v1/myinfo',
+                    url: '/api/myinfo',
                     method: 'PUT',
                     data: this.formItem
                 }).then(res=>{

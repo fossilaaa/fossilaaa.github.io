@@ -49,10 +49,9 @@
                     imgData.append(img, this.imgFiles[img]);
                 }
                 this.$axios({
-                    url: 'api/v1/blogimages',
+                    url: '/api/blogimages',
                     method: 'POST',
                     data: imgData,
-                    headers: {'Content-Type': 'multipart/form-data'},
                 }).then(res => {
                     /**
                      * 例如：返回数据为 res = [[pos, url], [pos, url]...]
@@ -76,7 +75,7 @@
                     return;
                 }
                 this.$axios({
-                    url: '/api/v1/blog',
+                    url: '/api/blog',
                     method: 'POST',
                     data: JSON.stringify({'mdContent': this.mdContent, 'htmlContent': this.htmlContent}),
                 }).then(res => {

@@ -210,7 +210,7 @@
         methods: {
             getRecommendedUsers() {
                 this.$axios({
-                    url: '/api/v1/recommendedusers',
+                    url: '/api/recommendedusers',
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -224,7 +224,7 @@
             },
             getUserBlogDetailsInfo() {
                 this.$axios({
-                    url: '/api/v1/userblogdetailsinfo/' + JSON.parse(localStorage.getItem('user')).userId,
+                    url: '/api/userblogdetailsinfo/' + JSON.parse(localStorage.getItem('user')).userId,
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {

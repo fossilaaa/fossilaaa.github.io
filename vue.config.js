@@ -1,26 +1,28 @@
 module.exports = {
     devServer: {
         port: 9000,
-        disableHostCheck: true,
+
+        // *** 前端调试时注释掉proxy--开始 ***
+
+        // proxy: {
+        //     '/api': {
+        //         target: 'http://localhost:8080',
+        //         ws: true,
+        //         crossOrigin: true,
+        //         pathRewrite: {
+        //             '^/api': ''
+        //         }
+        //     }
+        // }
+
+        // *** 前端调试时注释掉proxy--结束 ***
+
+
+        // *** 后端调试时注释掉before--开始 ***
+
         before(app, server) {
             [
-                app.get('/api/v1/123', (req, res) => {
-                    res.json({
-                        data: [
-                            {
-                                id: 1,
-                                title: 'web',
-                                price: 19999
-                            },
-                            {
-                                id: 2,
-                                title: 'json',
-                                price: 19990
-                            }
-                        ]
-                    })
-                }),
-                app.post('/api/v1/login', (req, res) => {
+                app.post('/api/login', (req, res) => {
                     res.json(data = {
                         status: {
                             code: 200,
@@ -36,7 +38,7 @@ module.exports = {
                         }
                     })
                 }),
-                app.post('/api/v1/register', (req, res) => {
+                app.post('/api/register', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -45,7 +47,7 @@ module.exports = {
                         data: {}
                     })
                 }),
-                app.post('/api/v1/blogimages', (req, res) => {
+                app.post('/api/blogimages', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -57,7 +59,7 @@ module.exports = {
                         ]
                     })
                 }),
-                app.get('/api/v1/myinfo', (req, res) => {
+                app.get('/api/myinfo', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -73,7 +75,7 @@ module.exports = {
                         }
                     })
                 }),
-                app.put('/api/v1/myinfo', (req, res) => {
+                app.put('/api/myinfo', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -89,7 +91,7 @@ module.exports = {
                         }
                     })
                 }),
-                app.get('/api/v1/userblogdetailsinfo/1', (req, res) => {
+                app.get('/api/userblogdetailsinfo/1', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -103,7 +105,7 @@ module.exports = {
                         ]
                     })
                 }),
-                app.get('/api/v1/classifications/1', (req, res) => {
+                app.get('/api/classifications/1', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -137,7 +139,7 @@ module.exports = {
                         ]
                     })
                 }),
-                app.get('/api/v1/recentblogs/1', (req, res) => {
+                app.get('/api/recentblogs/1', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -188,14 +190,14 @@ module.exports = {
                         ]
                     })
                 }),
-                app.get('/api/v1/blog/1', (req, res)=>{
+                app.get('/api/blog/1', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
                             msg: '成功'
                         },
-                        data:{
-                            user:{
+                        data: {
+                            user: {
                                 userId: 1,
                                 userName: 'a13956965930',
                                 userAvatar: 'http://1224242424.jpg'
@@ -210,16 +212,16 @@ module.exports = {
                         }
                     })
                 }),
-                app.post('/api/v1/blog', (req, res)=>{
+                app.post('/api/blog', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
                             msg: '成功'
                         },
-                        data:{}
+                        data: {}
                     })
                 }),
-                app.get('/api/v1/recommendedusers', (req, res) => {
+                app.get('/api/recommendedusers', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -299,7 +301,7 @@ module.exports = {
                         ]
                     })
                 }),
-                app.get('/api/v1/comments/1', (req, res)=>{
+                app.get('/api/comments/1', (req, res) => {
                     res.json({
                         status: {
                             code: 200,
@@ -307,7 +309,7 @@ module.exports = {
                         },
                         data: [
                             {
-                                user:{
+                                user: {
                                     userId: 1,
                                     userName: 'a13956965930',
                                     userAvatar: 'http://1212212.jpg'
@@ -315,7 +317,7 @@ module.exports = {
                                 comment: '写得真好，不错'
                             },
                             {
-                                user:{
+                                user: {
                                     userId: 1,
                                     userName: 'a13956965930',
                                     userAvatar: 'http://1212212.jpg'
@@ -323,7 +325,7 @@ module.exports = {
                                 comment: '写得真好，不错'
                             },
                             {
-                                user:{
+                                user: {
                                     userId: 1,
                                     userName: 'a13956965930',
                                     userAvatar: 'http://1212212.jpg'
@@ -335,5 +337,7 @@ module.exports = {
                 })
             ]
         }
+
+        // *** 后端调试时注释掉before--结束 ***
     }
 }

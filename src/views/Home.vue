@@ -76,7 +76,7 @@
         methods: {
             getClassifications() {
                 this.$axios({
-                    url: '/api/v1/classifications/' + this.user.userId,
+                    url: '/api/classifications/' + this.user.userId,
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -90,7 +90,7 @@
             },
             getRecentBlogs() {
                 this.$axios({
-                    url: '/api/v1/recentblogs/' + this.user.userId,
+                    url: '/api/recentblogs/' + this.user.userId,
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {
