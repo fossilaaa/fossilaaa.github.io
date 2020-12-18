@@ -4,24 +4,8 @@
             <Head></Head>
         </Header>
         <Content>
-            <Button @click="drawer = true" type="primary">打开</Button>
-            <Drawer title="Basic Drawer" draggable scrollable placement="left" :closable="false" v-model="drawer">
-                <collapse value="0" accordion simple>
-                    <Panel v-for="(classification, index) in classifications" :key="index">
-                        {{classification.class}}
-                        <div slot="content" style="padding-left: 40px">
-                            <List size="small">
-                                <ListItem style="cursor: pointer" v-for="(blog, index) in classification.blogsInfo"
-                                          :key="index">
-                                    {{blog.blogTitle}}
-                                </ListItem>
-                            </List>
-                        </div>
-                    </Panel>
-                </collapse>
-            </Drawer>
             <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blog, index) in recentBlogs"
+                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blog, index) in blogCollections"
                       :key="index">
                     <router-link :to="{name: 'Blog', params: {blogId: blog.blogId}}">
                         <div>
@@ -52,21 +36,18 @@
 </template>
 
 <script>
-    import Head from '../components/Header'
-    import Foot from '../components/Footer'
-
+    import Head from "../components/Header";
+    import Foot from "../components/Footer";
     import {mapState} from 'vuex';
 
     export default {
-        name: "Home",
+        name: "Collections",
         data() {
             return {
-                drawer: false,
-                classifications: [],
-                recentBlogs: []
+                blogCollections: []
             }
         },
-        computed:{
+        computed: {
             ...mapState(['user'])
         },
         components: {
@@ -74,27 +55,13 @@
             Foot
         },
         methods: {
-            getClassifications() {
+            getBlogCollections() {
                 this.$axios({
-                    url: '/api/classifications/' + this.user.userId,
+                    url: '/api/collections/' + this.user.userId,
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {
-                        this.classifications = res.data.data;
-                    } else {
-                        alert(res.data.status.msg);
-                    }
-                }).catch(error => {
-                    alert(error);
-                })
-            },
-            getRecentBlogs() {
-                this.$axios({
-                    url: '/api/recentblogs/' + this.user.userId,
-                    method: 'GET',
-                }).then(res => {
-                    if (res.data.status.code === 200) {
-                        this.recentBlogs = res.data.data;
+                        this.blogCollections = res.data.data;
                     } else {
                         alert(res.data.status.msg);
                     }
@@ -104,16 +71,11 @@
             }
         },
         created() {
-            this.$Loading.start();
-            this.getClassifications();
-            this.getRecentBlogs();
-            this.$Loading.finish();
+            this.getBlogCollections();
         }
     }
 </script>
 
 <style scoped>
-    .font_color {
-        color: #8B8989;
-    }
+
 </style>

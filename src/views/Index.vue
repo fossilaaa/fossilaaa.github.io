@@ -8,7 +8,7 @@
         <Layout style="margin: 1% 10% 1% 10%">
             <Content style="max-width: 70%">
                 <!--                搜索框-->
-                <Input search v-model="value" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%"/>
+                <Input search v-model="value" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%" @click="search"/>
                 <!--                筛选下拉框-->
                 <div style="display: inline">
                     <Dropdown>
@@ -27,7 +27,7 @@
                 <!--                博客列表卡片-->
                 <Card style="margin-top: 20px">
                     <List item-layout="vertical">
-                        <ListItem v-for="item in data" :key="item.title">
+                        <ListItem v-for="(item, index) in data" :key="index">
                             <ListItemMeta :avatar="item.avatar" :title="item.title" :description="item.description"/>
                             {{ item.content }}
                             <template slot="action">
@@ -83,7 +83,8 @@
                     </a>
                     <ul>
                         <li v-for="(user, index) in randomRecommendedUsers" :key="index" style="list-style: none">
-                            <router-link :to="{name: 'UserHome', params:{userId: user.userId}}">{{ user.userName }}</router-link>
+                            <router-link :to="{name: 'UserHome', params:{userId: user.userId}}">{{ user.userName }}
+                            </router-link>
                             <span style="float: right">{{ user.userCollectionsCount }}收藏</span>
                         </li>
                     </ul>
@@ -95,24 +96,7 @@
                         <Icon type="ios-flame"/>
                         热门标签
                     </p>
-                    <Tag color="default">default</Tag>
-                    <Tag color="primary">primary</Tag>
-                    <Tag color="success">success</Tag>
-                    <Tag color="error">error</Tag>
-                    <Tag color="warning">warning</Tag>
-                    <Tag color="magenta">magenta</Tag>
-                    <Tag color="#f00">red</Tag>
-                    <Tag color="volcano">volcano</Tag>
-                    <Tag color="orange">orange</Tag>
-                    <Tag color="gold">gold</Tag>
-                    <Tag color="yellow">yellow</Tag>
-                    <Tag color="lime">lime</Tag>
-                    <Tag color="green">green</Tag>
-                    <Tag color="cyan">cyan</Tag>
-                    <Tag color="blue">blue</Tag>
-                    <Tag color="geekblue">geekblue</Tag>
-                    <Tag color="purple">purple</Tag>
-                    <Tag color="#FFA2D3">Custom Color</Tag>
+                    <router-link to="/"><Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]">{{tag.tagName}}</Tag></router-link>
                 </Card>
                 <BackTop></BackTop>
             </Sider>
@@ -175,13 +159,8 @@
                         content: 'This is the content, this is the content, this is the content, this is the content.'
                     }
                 ],
-                user: {
-                    username: 'gaoi',
-                    article_total: 30,
-                    message_count: 10
-                },
                 value: '',
-                tag_colors: [
+                tagColors: [
                     'FFA2D3',
                     'purple',
                     'geekblue',
@@ -191,17 +170,23 @@
                     'lime',
                     'yellow',
                     'orange',
-                    'orange',
                     'gold',
                     'volcano',
                     'magenta',
                     'warning',
                     'red'
                 ],
+                mostTags: [],
             }
         },
         computed: {
-            ...mapState(['user', 'userToken'])
+            ...mapState(['user', 'userToken']),
+            // randomColor: function(index) {
+            //     console.log(index);
+            //     var index1 = index * Math.random() % this.tagColors.length;
+            //     alert(index1);
+            //     return this.tagColors[index1];
+            // }
         },
         components: {
             Head,
@@ -224,7 +209,7 @@
             },
             getUserBlogDetailsInfo() {
                 this.$axios({
-                    url: '/api/userblogdetailsinfo/' + JSON.parse(localStorage.getItem('user')).userId,
+                    url: '/api/userblogdetailsinfo/' + this.user.userId,
                     method: 'GET',
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -254,26 +239,37 @@
                     }
                     return return_array;
                 }
+
                 this.randomRecommendedUsers = getArrayItems(this.recommendedUsers, 5);
                 console.log(this.randomRecommendedUsers);
+            },
+            getMostTags() {
+                this.$axios({
+                    url: '/api/mosttags',
+                    method: 'GET',
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.mostTags = res.data.data;
+                    }else{
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error=>{
+                    alert(error);
+                })
+            },
+            search(){
+                this.$router.push('/search');
             }
         },
         created() {
             this.$Loading.start();
-            this.getUserBlogDetailsInfo();
-            this.getRecommendedUsers();
-            this.changeLimit();
+            if (this.user) {
+                this.getUserBlogDetailsInfo();
+            }
+            // this.getRecommendedUsers();
+            // this.changeLimit();
+            this.getMostTags();
             this.$Loading.finish();
         }
     }
 </script>
-
-<style scoped>
-    .demo-badge {
-        width: 42px;
-        height: 42px;
-        background: #eee;
-        border-radius: 6px;
-        display: inline-block;
-    }
-</style>

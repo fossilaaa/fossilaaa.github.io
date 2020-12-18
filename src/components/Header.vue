@@ -1,5 +1,5 @@
 <template>
-    <Menu mode="horizontal" :theme="light" active-name="1">
+    <Menu mode="horizontal" active-name="1">
         <span style="float: left; margin-left: 1%">
             <Avatar shape="square"
                     src="https://upload.jianshu.io/users/upload_avatars/25092372/04adab21-2a94-44fb-acc4-97d5450422a8?imageMogr2/auto-orient/strip|imageView2/1/w/120/h/120"
@@ -16,22 +16,27 @@
         <Submenu name="3" style="float: right" v-if="user">
             <template slot="title">
                 <Avatar shape="square"
-                        :src="user.userAvatar"
+                        :src="photoSrc(user.userAvatar)"
                         size="large"/>
             </template>
             <MenuItem name="3-1" to="/home">
                 <Icon type="md-home"/>
                 我的主页
             </MenuItem>
-            <MenuItem name="3-2">
+            <MenuItem name="3-2" to="/collections">
                 <Icon type="md-heart"/>
                 收藏的文章
             </MenuItem>
-            <MenuItem name="3-3">
+            <MenuItem name="3-2" to="/notices">
+                <Icon type="md-at"/>
+                通知
+                <Badge status="error" v-if="noticesCount"></Badge>
+            </MenuItem>
+            <MenuItem name="3-4" to="/myinfo">
                 <Icon type="md-cog"/>
                 设置
             </MenuItem>
-            <MenuItem name="3-4" @click.native="changeLogout">
+            <MenuItem name="3-5" @click.native="changeLogout">
                 <Icon type="md-log-out"/>
                 退出登录
             </MenuItem>
@@ -50,14 +55,41 @@
         data() {
             return {
                 activeIndex: '1',
+                noticesCount: 0,
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['user']),
+            photoSrc() {
+                return photoSrc => {
+                    return `${this.$settings.HOST}${photoSrc}`;
+                }
+            },
         },
         methods: {
             ...mapActions(['changeLogout']),
+            changeIfNotices() {
+                this.$axios({
+                    url: '/api/noticescount/' + this.user.userId,
+                    method: 'GET',
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.noticesCount = res.data.data.noticesCount;
+                    } else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error => {
+                    alert(error);
+                })
+            },
         },
+        created() {
+            if (this.user) {
+                this.changeIfNotices();
+            }
+        }
     }
     ;
 </script>
+<style scoped>
+</style>

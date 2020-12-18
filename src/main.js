@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+// 自定义设置
+import settings from './settings'
 // IView-ui
 import ViewUI from 'view-design'
 import 'view-design/dist/styles/iview.css'
@@ -21,16 +23,16 @@ Vue.use(mavonEdit);
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.transformRequest = [function (data) {
-    let ret = ''
-    for (let it in data) {
-        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-    }
-    return ret
-}]
+// axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.transformRequest = [function (data) {
+//     let ret = ''
+//     for (let it in data) {
+//         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+//     }
+//     return ret
+// }]
 
-// Vue.http.options.emulateJSON = true;
+Vue.prototype.$settings = settings;
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;
 

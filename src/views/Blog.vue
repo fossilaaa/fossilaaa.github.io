@@ -6,34 +6,39 @@
         <Content>
             <div>
                 <div>
-                            <p style="font-size: 24px">
-                                {{blogInfo.blog.blogTitle}}
-                            </p>
-                            <!-- <p class="font_color" style="margin-top: 10px">{{blogInfo.blog.blogSummary}}</p>
-                            <Divider style="margin-top: 15px; margin-bottom: 15px"/> -->
-                            <p class="font_color" style="font-size: 10px">
-                                <Icon type="ios-person-outline"/>
-                                {{blogInfo.user.userName}}
-                                <Icon type="ios-eye-outline" style="margin-left: 10px"/>
-                                {{blogInfo.blog.blogViews}}
-                                <Icon type="ios-heart-outline" style="margin-left: 10px"/>
-                                {{blogInfo.blog.blogCollectionsCount}}
-                                <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
-                                {{blogInfo.blog.blogCommentsCount}}
-                            </p>
-                        </div>
-            <Card>
-                <div v-html="blogInfo.blog.blogHtmlContent"></div>
-            </Card>
+                    <p style="font-size: 24px">
+                        {{blogInfo.blog.blogTitle}}
+                    </p>
+                    <!-- <p class="font_color" style="margin-top: 10px">{{blogInfo.blog.blogSummary}}</p>
+                    <Divider style="margin-top: 15px; margin-bottom: 15px"/> -->
+                    <p class="font_color" style="font-size: 10px">
+                        <Icon type="ios-person-outline"/>
+                        {{blogInfo.user.userName}}
+                        <Icon type="ios-eye-outline" style="margin-left: 10px"/>
+                        {{blogInfo.blog.blogViews}}
+                        <Icon type="ios-heart-outline" style="margin-left: 10px"/>
+                        {{blogInfo.blog.blogCollectionsCount}}
+                        <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
+                        {{blogInfo.blog.blogCommentsCount}}
+                    </p>
+                </div>
+                <Card>
+                    <div v-html="blogInfo.blog.blogHtmlContent"></div>
+                </Card>
             </div>
             <Divider/>
             <div>
                 <List>
                     <ListItem v-for="(item, index) in blogComments" :key="index">
-                        <ListItemMeta :avatar="item.user.userAvatar" :title="item.user.userName" :description="item.comment" />
+                        <ListItemMeta :avatar="item.user.userAvatar" :title="item.user.userName"
+                                      :description="item.comment"/>
                     </ListItem>
                 </List>
             </div>
+            <Divider/>
+            <Input v-model="comment" maxlength="200" show-word-limit type="textarea" placeholder="说点什么吧..."
+                   style="width: 200px"/>
+            <Button type="primary" @click="publishComment">发表评论</Button>
         </Content>
         <Footer>
             <Foot></Foot>
@@ -48,16 +53,16 @@
 
     export default {
         name: "Blog",
-        data(){
+        data() {
             return {
                 blogId: 0,
                 blogInfo: {
-                    user:{
+                    user: {
                         userId: 0,
                         userName: '',
                         userAvatar: ''
                     },
-                    blog:{
+                    blog: {
                         blogTitle: '',
                         blogHtmlContent: '<h1>出错惹~</h1>',
                         blogViews: 123,
@@ -65,45 +70,68 @@
                         blogCollectionsCount: 8
                     }
                 },
-                blogComments: []
+                blogComments: [],
+                comment: '',
             }
         },
-        computed:{
+        computed: {
             ...mapState(['user'])
         },
-        components:{
+        components: {
             Head,
             Foot
         },
-        methods:{
-            getBlogId(){
+        methods: {
+            getBlogId() {
                 this.blogId = this.$route.params.blogId;
             },
-            getBlog(){
+            getBlog() {
                 this.$axios({
                     url: '/api/blog/' + this.blogId,
                     method: 'GET',
-                }).then(res=>{
-                    if (res.data.status.code === 200){
+                }).then(res => {
+                    if (res.data.status.code === 200) {
                         this.blogInfo = res.data.data;
-                    }else{
+                    } else {
                         alert(res.data.status.msg);
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     alert(error);
                 })
             },
-            getBlogComments(){
+            getBlogComments() {
                 this.$axios({
                     url: '/api/comments/' + this.blogId,
                     method: 'GET',
-                }).then(res=>{
+                }).then(res => {
                     if (res.data.status.code === 200) {
                         this.blogComments = res.data.data;
-                    }else{
+                    } else {
                         alert(res.data.status.msg);
                     }
-                }).catch(error=>{
+                }).catch(error => {
+                    alert(error);
+                })
+            },
+            publishComment() {
+                this.$axios({
+                    url: '/api/comment',
+                    method: 'POST',
+                    data: {
+                        blogId: this.blogId,
+                        userId: this.user.userId,
+                        comment: this.comment
+                    }
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.$Notice.success({
+                            title: '发表成功'
+                        });
+                        this.comment = '';
+                    } else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error => {
                     alert(error);
                 })
             }

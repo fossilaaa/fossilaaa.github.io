@@ -50,9 +50,25 @@ const routes = [
         }
     },
     {
-        path: '/userhome/:userId',
-        name: 'UserHome',
-        component: () => import('../views/UserHome')
+        path: '/search',
+        name: 'Search',
+        component: () => import('../views/Search')
+    },
+    {
+        path: '/notices',
+        name: 'Notices',
+        component: () => import('../views/Notices'),
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '/collections',
+        name: 'Collections',
+        component: () => import('../views/Collections'),
+        meta: {
+            requireAuth: true
+        }
     },
     {
         path: '*',

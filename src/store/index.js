@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '',
-        userToken: localStorage.getItem('userToken') ? localStorage.getItem('UserToken') : ''
+        userToken: localStorage.getItem('userToken') ? localStorage.getItem('UserToken') : '',
     },
     mutations: {
         //用户登录，保存用户信息和token
@@ -22,7 +22,7 @@ export default new Vuex.Store({
             state.userToken = '';
             localStorage.removeItem('user');
             localStorage.removeItem('userToken');
-        }
+        },
     },
     actions: {
         //用户登录
@@ -32,7 +32,7 @@ export default new Vuex.Store({
         //用户登出
         changeLogout({commit}) {
             commit('changeLogout');
-        }
+        },
     },
     modules: {}
 })
