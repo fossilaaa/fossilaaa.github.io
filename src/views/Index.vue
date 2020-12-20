@@ -11,18 +11,18 @@
                 <Input search v-model="value" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%" @click="search"/>
                 <!--                筛选下拉框-->
                 <div style="display: inline">
-                    <Dropdown>
-                        <a href="javascript:void(0)">
-                            时间
-                            <Icon type="ios-arrow-down"></Icon>
-                        </a>
-                        <DropdownMenu slot="list">
-                            <DropdownItem>一周内</DropdownItem>
-                            <DropdownItem>一个月内</DropdownItem>
-                            <DropdownItem>一年内</DropdownItem>
-                            <DropdownItem>重置</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
+<!--                    <Dropdown>-->
+<!--                        <a href="javascript:void(0)">-->
+<!--                            时间-->
+<!--                            <Icon type="ios-arrow-down"></Icon>-->
+<!--                        </a>-->
+<!--                        <DropdownMenu slot="list">-->
+<!--                            <DropdownItem>一周内</DropdownItem>-->
+<!--                            <DropdownItem>一个月内</DropdownItem>-->
+<!--                            <DropdownItem>一年内</DropdownItem>-->
+<!--                            <DropdownItem>重置</DropdownItem>-->
+<!--                        </DropdownMenu>-->
+<!--                    </Dropdown>-->
                 </div>
                 <!--                博客列表卡片-->
                 <Card style="margin-top: 20px">
@@ -266,8 +266,8 @@
             if (this.user) {
                 this.getUserBlogDetailsInfo();
             }
-            // this.getRecommendedUsers();
-            // this.changeLimit();
+            this.getRecommendedUsers();
+            this.changeLimit();
             this.getMostTags();
             this.$Loading.finish();
         }
