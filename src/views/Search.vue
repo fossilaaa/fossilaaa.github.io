@@ -32,6 +32,12 @@
         },
         methods:{
 
+        },
+        created() {
+        },
+        beforeRouteEnter(to, from, next)
+        {
+            alert(from.name);
         }
     }
 </script>

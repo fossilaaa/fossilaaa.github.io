@@ -8,37 +8,51 @@ const routes = [
     {
         path: '/',
         name: 'Index',
-        component: Index
+        component: Index,
+        meta: {
+            title: '欢迎使用Bubble个人博客'
+        }
     },
     {
         path: '/register',
         name: 'Register',
-        component: () => import('../views/Register')
+        component: () => import('../views/Register'),
+        meta: {
+            title: '欢迎注册Bubble个人博客'
+        }
     },
     {
         path: '/login',
         name: 'Login',
-        component: () => import('../views/Login')
+        component: () => import('../views/Login'),
+        meta: {
+            title: '欢迎登录Bubble个人博客'
+        }
     },
     {
         path: '/addblog',
         name: 'AddBlog',
         component: () => import('../views/AddBlog'),
         meta: {
-            requireAuth: true
+            requireAuth: true,
+            title: '发布博客'
         }
     },
     {
         path: '/blog/:blogId',
         name: 'Blog',
-        component: () => import('../views/Blog')
+        component: () => import('../views/Blog'),
+        meta: {
+            title: 'Bubble博客'
+        }
     },
     {
         path: '/myinfo',
         name: 'MyInfo',
         component: () => import('../views/MyInfo.vue'),
         meta: {
-            requireAuth: true
+            requireAuth: true,
+            title: '我的信息'
         }
     },
     {
@@ -46,30 +60,41 @@ const routes = [
         name: 'Home',
         component: () => import('../views/Home'),
         meta: {
-            requireAuth: true
+            requireAuth: true,
+            title: '我的主页'
         }
     },
     {
         path: '/search?key',
         name: 'Search',
-        component: () => import('../views/Search')
+        component: () => import('../views/Search'),
+        meta: {
+            title: '搜索'
+        }
     },
     {
         path: '/blogsoftag/:tagId',
         name: 'BlogsOfTag',
-        component: () => import('../views/BlogsOfTag')
+        component: () => import('../views/BlogsOfTag'),
+        meta: {
+            title: 'Bubble博客'
+        }
     },
     {
         path: '/blogsofauthor/:userId',
         name: 'BlogsOfAuthor',
-        component: () => import('../views/BlogsOfAuthor')
+        component: () => import('../views/BlogsOfAuthor'),
+        meta: {
+            title: 'Bubble博客'
+        }
     },
     {
         path: '/notices',
         name: 'Notices',
         component: () => import('../views/Notices'),
         meta: {
-            requireAuth: true
+            requireAuth: true,
+            title: '我的通知'
         }
     },
     {
@@ -99,6 +124,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    if (to.meta.title){
+        document.title = to.meta.title;
+    }
     if (to.matched.some(record => record.meta.requireAuth)) {
         if (!localStorage.getItem('user')) {
             alert(to.fullPath);

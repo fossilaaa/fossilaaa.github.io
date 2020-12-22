@@ -22,18 +22,6 @@ Vue.use(ElementUI);
 Vue.use(mavonEdit);
 Vue.use(qs);
 
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.transformRequest = [function (data) {
-//     let ret = ''
-//     for (let it in data) {
-//         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-//     }
-//     return ret
-// }]
-
 Vue.prototype.$settings = settings;
 Vue.prototype.$axios = axios;
 Vue.config.productionTip = false;

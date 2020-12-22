@@ -124,11 +124,12 @@
                 for (var pos in this.imgFiles) {
                     imgData.append('pos', this.imgFiles[pos]);
                 }
-                console.log(imgData);
+                imgData.append('blogId', this.blogId);
+                // console.log(imgData);
                 this.$axios({
                     url: '/api/blogimages',
                     method: 'POST',
-                    data: imgData
+                    data: imgData,
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         /**
@@ -159,6 +160,7 @@
                 }
                 await this.uploadImgs();
                 var data = new FormData();
+                // alert(this.htmlContent);
                 data.append('userId', this.user.userId);
                 data.append('blogId', this.blogId);
                 data.append('blogTitle', this.blogTitle);
@@ -171,9 +173,6 @@
                     url: '/api/blog',
                     method: 'POST',
                     data: data,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-                    }
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.isSaved = 1;
@@ -191,19 +190,20 @@
                     return;
                 }
                 await this.uploadImgs();
+                var data = new FormData();
+                // alert(this.htmlContent);
+                data.append('userId', this.user.userId);
+                data.append('blogId', this.blogId);
+                data.append('blogTitle', this.blogTitle);
+                data.append('blogTags', this.blogTags);
+                data.append('blogClassification', this.blogClassification);
+                data.append('mdContent', this.mdContent);
+                data.append('htmlContent', this.htmlContent);
+                data.append('flag', 1);
                 this.$axios({
                     url: '/api/blog',
                     method: 'POST',
-                    data: {
-                        userId: this.user.userId,
-                        blogId: this.blogId,
-                        blogTitle: this.blogTitle,
-                        blogTags: this.blogTags,
-                        blogClassification: this.blogClassification,
-                        mdContent: this.mdContent,
-                        htmlContent: this.htmlContent,
-                        flag: 1  // 0表示只保存，1表示发表
-                    }
+                    data: data
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.isSaved = 1;

@@ -13,32 +13,30 @@
                 <div style="display: inline">
                 </div>
                 <!--                博客列表卡片-->
-                <Card style="margin-top: 20px">
-                    <List item-layout="vertical">
-                        <ListItem v-for="(item, index) in data" :key="index">
-                            <ListItemMeta :avatar="item.avatar" :title="item.title" :description="item.description"/>
-                            {{ item.content }}
-                            <template slot="action">
-                                <li>
-                                    <Icon type="ios-star-outline"/>
-                                    123
-                                </li>
-                                <li>
-                                    <Icon type="ios-thumbs-up-outline"/>
-                                    234
-                                </li>
-                                <li>
-                                    <Icon type="ios-chatbubbles-outline"/>
-                                    345
-                                </li>
-                            </template>
-                            <template slot="extra">
-                                <img src="https://dev-file.iviewui.com/5wxHCQMUyrauMCGSVEYVxHR5JmvS7DpH/large"
-                                     style="width: 280px">
-                            </template>
-                        </ListItem>
-                    </List>
-                </Card>
+                <div>
+                    <Card style="margin-top: 10px" v-for="(blog, index) in indexRandomBlogs"
+                          :key="index">
+                        <router-link :to="{name: 'Blog', params: {blogId: blog.blogId}}">
+                            <div>
+                                <p style="font-size: 24px">
+                                    {{blog.blogTitle}}
+                                </p>
+                                <!--                            <p class="font_color" style="margin-top: 10px">{{blog.blogSummary}}</p>-->
+                                <Divider style="margin-top: 15px; margin-bottom: 15px"/>
+                                <p class="font_color" style="font-size: 10px">
+                                    <Icon type="ios-person-outline"/>
+                                    {{blog.userName}}
+                                    <Icon type="ios-eye-outline" style="margin-left: 10px"/>
+                                    {{blog.blogViews}}
+                                    <Icon type="ios-heart-outline" style="margin-left: 10px"/>
+                                    {{blog.blogCollectionsCount}}
+                                    <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
+                                    {{blog.blogCommentsCount}}
+                                </p>
+                            </div>
+                        </router-link>
+                    </Card>
+                </div>
             </Content>
             <!--            侧边栏-->
             <Sider hide-trigger style="margin-left: 5%; min-width: 25%">
@@ -109,44 +107,7 @@
                 recommendedUsers: [],
                 randomRecommendedUsers: [],
                 userBlogDetailsInfo: [],
-                data: [
-                    {
-                        title: 'This is title 1',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 2',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 3',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 1',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 2',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    },
-                    {
-                        title: 'This is title 3',
-                        description: 'This is description, this is description, this is description.',
-                        avatar: 'https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar',
-                        content: 'This is the content, this is the content, this is the content, this is the content.'
-                    }
-                ],
+                indexRandomBlogs: [],
                 key: '',
                 tagColors: [
                     'FFA2D3',
@@ -246,17 +207,19 @@
                 })
             },
             search(){
-                var data = new FormData();
-                data.append('key', this.key);
+            },
+            getIndexRandomBlogs(){
                 this.$axios({
-                    url: '/api/searchany',
-                    method: 'POST',
-                    data: data,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-                    }
+                    url: '/api/randomblogs',
+                    method: 'GET',
                 }).then(res=>{
-
+                    if (res.data.status.code === 200){
+                        this.indexRandomBlogs = res.data.data;
+                    }else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error=>{
+                    alert(error);
                 })
             }
         },
@@ -268,7 +231,13 @@
             this.getRecommendedUsers();
             this.changeLimit();
             this.getMostTags();
+            this.getIndexRandomBlogs();
             this.$Loading.finish();
         }
     }
 </script>
+<style scoped>
+    .font_color {
+        color: #8B8989;
+    }
+</style>
