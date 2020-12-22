@@ -196,12 +196,15 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        var data = new FormData();
+                        data.append('userPhone', this.formInline.userPhone);
+                        data.append('userPassword', this.formInline.userPassword);
                         this.$axios({
                             url: '/api/register',
                             method: 'POST',
-                            data: {
-                                userPhone: this.formInline.userPhone,
-                                userPassword: this.formInline.userPassword
+                            data: data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                             }
                         }).then(res => {
                             if (res.data.status.code === 200) {
@@ -212,8 +215,6 @@
                         }).catch(error => {
                             alert(error);
                         })
-                    } else {
-                        this.$Message.error('亲亲，您的信息有误惹~');
                     }
                 })
             }

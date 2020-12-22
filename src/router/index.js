@@ -50,9 +50,19 @@ const routes = [
         }
     },
     {
-        path: '/search',
+        path: '/search?key',
         name: 'Search',
         component: () => import('../views/Search')
+    },
+    {
+        path: '/blogsoftag/:tagId',
+        name: 'BlogsOfTag',
+        component: () => import('../views/BlogsOfTag')
+    },
+    {
+        path: '/blogsofauthor/:userId',
+        name: 'BlogsOfAuthor',
+        component: () => import('../views/BlogsOfAuthor')
     },
     {
         path: '/notices',

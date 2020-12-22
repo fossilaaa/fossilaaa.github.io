@@ -68,7 +68,17 @@
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['user']),
+            imgUrl() {
+                return imgUrl => {
+
+                    for (i = 0; i < imgUrl.length; i++) {
+                        alert(imgUrl[i][1]);
+                        imgUrl[i][1] = `${this.$settings.HOST}` + imgUrl[i][1]
+                    }
+                    return imgUrl;
+                }
+            },
         },
         methods: {
             getClassificationsNames() {
@@ -112,16 +122,13 @@
                 // 第一步.将图片上传到服务器.
                 var imgData = new FormData();  //imgData是一个{位置: form表单格式的图片文件}格式的字典
                 for (var pos in this.imgFiles) {
-                    imgData.append(pos, this.imgFiles[pos]);
+                    imgData.append('pos', this.imgFiles[pos]);
                 }
                 console.log(imgData);
                 this.$axios({
                     url: '/api/blogimages',
                     method: 'POST',
-                    data: {
-                        blogId: this.blog,
-                        files: imgData
-                    },
+                    data: imgData
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         /**
@@ -151,18 +158,21 @@
                     return;
                 }
                 await this.uploadImgs();
+                var data = new FormData();
+                data.append('userId', this.user.userId);
+                data.append('blogId', this.blogId);
+                data.append('blogTitle', this.blogTitle);
+                data.append('blogTags', this.blogTags);
+                data.append('blogClassification', this.blogClassification);
+                data.append('mdContent', this.mdContent);
+                data.append('htmlContent', this.htmlContent);
+                data.append('flag', 0);
                 this.$axios({
                     url: '/api/blog',
                     method: 'POST',
-                    data: {
-                        userId: this.user.userId,
-                        blogId: this.blogId,
-                        blogTitle: this.blogTitle,
-                        blogTags: this.blogTags,
-                        blogClassification: this.blogClassification,
-                        mdContent: this.mdContent,
-                        htmlContent: this.htmlContent,
-                        flag: 0  // 0表示只保存，1表示发表
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                     }
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -212,13 +222,15 @@
                 this.modal = true;
             },
             addClassification(classificationName) {
-                // alert(classificationName);
+                var data = new FormData();
+                data.append('userId', this.user.userId);
+                data.append('classificationName', classificationName);
                 this.$axios({
                     url: '/api/classification',
                     method: 'POST',
-                    data: {
-                        userId: this.user.userId,
-                        classificationName: classificationName
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                     }
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -236,7 +248,7 @@
             }
         },
         beforeRouteLeave(to, from, next) {
-            if (!this.isSaved) {
+            if (!this.isSaved && this.mdContent.length) {
                 alert("不保存？你个憨憨");
                 next(false);
             } else {

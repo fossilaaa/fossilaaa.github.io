@@ -40,6 +40,8 @@
 <script>
     import Head from "../components/Header";
     import Foot from "../components/Footer";
+    import {mapState} from 'vuex';
+
     export default {
         name: "Notice",
         data(){
@@ -125,7 +127,7 @@
             }
         },
         computed:{
-
+            ...mapState(['user'])
         },
         components:{
             Head,

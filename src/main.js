@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from 'axios'
+import qs from 'querystring'
 // 自定义设置
 import settings from './settings'
 // IView-ui
@@ -19,10 +20,11 @@ import 'mavon-editor/dist/css/index.css'
 Vue.use(ViewUI);
 Vue.use(ElementUI);
 Vue.use(mavonEdit);
+Vue.use(qs);
 
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers.delete['Content-Type'] = 'application/x-www-form-urlencoded';
 // axios.defaults.headers.put['Content-Type'] = 'application/x-www-form-urlencoded';
 // axios.defaults.transformRequest = [function (data) {
 //     let ret = ''

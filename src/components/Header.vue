@@ -2,7 +2,7 @@
     <Menu mode="horizontal" active-name="1">
         <span style="float: left; margin-left: 1%">
             <Avatar shape="square"
-                    src="https://upload.jianshu.io/users/upload_avatars/25092372/04adab21-2a94-44fb-acc4-97d5450422a8?imageMogr2/auto-orient/strip|imageView2/1/w/120/h/120"
+                    src="/logo.jpg"
                     size="large"/>
         </span>
         <MenuItem name="1" to="/login" style="float: right" v-if="!user">
@@ -36,7 +36,7 @@
                 <Icon type="md-cog"/>
                 设置
             </MenuItem>
-            <MenuItem name="3-5" @click.native="changeLogout">
+            <MenuItem name="3-5" @click.native="logout">
                 <Icon type="md-log-out"/>
                 退出登录
             </MenuItem>
@@ -82,6 +82,13 @@
                     alert(error);
                 })
             },
+            logout(){
+                this.changeLogout();
+                this.$Notice.open({
+                    title: '您已退出'
+                })
+                this.$router.push('/');
+            }
         },
         created() {
             if (this.user) {

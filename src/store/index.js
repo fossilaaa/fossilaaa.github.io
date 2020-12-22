@@ -23,6 +23,10 @@ export default new Vuex.Store({
             localStorage.removeItem('user');
             localStorage.removeItem('userToken');
         },
+        changeUserInfo(state, {user}){
+            state.user = user;
+            localStorage.setItem('user', JSON.stringify(user));
+        }
     },
     actions: {
         //用户登录
@@ -33,6 +37,9 @@ export default new Vuex.Store({
         changeLogout({commit}) {
             commit('changeLogout');
         },
+        changeUserInfo({commit}, {user}) {
+            commit('changeUserInfo', {user: user});
+        }
     },
     modules: {}
 })

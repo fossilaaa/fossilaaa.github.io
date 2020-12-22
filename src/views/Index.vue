@@ -8,21 +8,9 @@
         <Layout style="margin: 1% 10% 1% 10%">
             <Content style="max-width: 70%">
                 <!--                搜索框-->
-                <Input search v-model="value" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%" @click="search"/>
+                <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%" @click="search" @keyup.enter="search"/>
                 <!--                筛选下拉框-->
                 <div style="display: inline">
-<!--                    <Dropdown>-->
-<!--                        <a href="javascript:void(0)">-->
-<!--                            时间-->
-<!--                            <Icon type="ios-arrow-down"></Icon>-->
-<!--                        </a>-->
-<!--                        <DropdownMenu slot="list">-->
-<!--                            <DropdownItem>一周内</DropdownItem>-->
-<!--                            <DropdownItem>一个月内</DropdownItem>-->
-<!--                            <DropdownItem>一年内</DropdownItem>-->
-<!--                            <DropdownItem>重置</DropdownItem>-->
-<!--                        </DropdownMenu>-->
-<!--                    </Dropdown>-->
                 </div>
                 <!--                博客列表卡片-->
                 <Card style="margin-top: 20px">
@@ -82,8 +70,8 @@
                         换一换
                     </a>
                     <ul>
-                        <li v-for="(user, index) in randomRecommendedUsers" :key="index" style="list-style: none">
-                            <router-link :to="{name: 'UserHome', params:{userId: user.userId}}">{{ user.userName }}
+                        <li v-for="(user, index) in recommendedUsers" :key="index" style="list-style: none">
+                            <router-link :to="{name: 'BlogsOfAuthor', params:{userId: user.userId}}" style="color: red">{{ user.userName }}
                             </router-link>
                             <span style="float: right">{{ user.userCollectionsCount }}收藏</span>
                         </li>
@@ -96,7 +84,7 @@
                         <Icon type="ios-flame"/>
                         热门标签
                     </p>
-                    <router-link to="/"><Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]">{{tag.tagName}}</Tag></router-link>
+                        <Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]"><router-link :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}" style="color: #999999">{{tag.tagName}}</router-link></Tag>
                 </Card>
                 <BackTop></BackTop>
             </Sider>
@@ -159,7 +147,7 @@
                         content: 'This is the content, this is the content, this is the content, this is the content.'
                     }
                 ],
-                value: '',
+                key: '',
                 tagColors: [
                     'FFA2D3',
                     'purple',
@@ -258,7 +246,18 @@
                 })
             },
             search(){
-                this.$router.push('/search');
+                var data = new FormData();
+                data.append('key', this.key);
+                this.$axios({
+                    url: '/api/searchany',
+                    method: 'POST',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+                    }
+                }).then(res=>{
+
+                })
             }
         },
         created() {

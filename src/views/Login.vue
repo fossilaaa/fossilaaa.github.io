@@ -136,14 +136,16 @@
             handleSubmit(name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        var data = new FormData();
+                        data.append('userName', this.formInline.userName);
+                        data.append('userPassword', this.formInline.userPassword);
                         this.$axios({
                             url: '/api/login',
                             method: 'POST',
-                            data: {
-                                userName: this.formInline.userName,
-                                userPassword: this.formInline.userPassword
-                            },
-
+                            data: data,
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+                            }
                         }).then(res => {
                             if (res.data.status.code === 200) {
                                 // 通过vuex设置用户登陆状态记录和用户认证
@@ -155,8 +157,6 @@
                         }).catch(error => {
                             alert(error);
                         })
-                    } else {
-                        this.$Message.error('亲亲，你的信息有误惹~');
                     }
                 })
             }

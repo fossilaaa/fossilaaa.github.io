@@ -332,12 +332,24 @@ module.exports = {
         //                     blog: {
         //                         blogTitle: '学习markdown',
         //                         blogHtmlContent: "<h1><a id=\"_0\"></a>这是标题</h1>",
-        //                         blogTags: [1, 2],
+        //                         blogTags: [
+        //                             {
+        //                                 tagId: 1,
+        //                                 tagName: 'Python'
+        //                             },
+        //                             {
+        //                                 tagId: 2,
+        //                                 tagName: 'Go'
+        //                             },
+        //                             {
+        //                                 tagId: 2,
+        //                                 tagName: 'Java'
+        //                             }
+        //                         ],
         //                         blogClassification: 1,
         //                         blogViews: 123,
         //                         blogCommentsCount: 23,
         //                         blogCollectionsCount: 8,
-        //                         blogTime: '2020.12.12.2312xxxx'
         //                     }
         //                 }
         //             })

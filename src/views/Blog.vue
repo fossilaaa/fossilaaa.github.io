@@ -21,10 +21,17 @@
                         <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
                         {{blogInfo.blog.blogCommentsCount}}
                     </p>
+                    <p>
+                        <Tag v-for="(tag, index) in blogInfo.blog.blogTags" style="margin-right: 10px" :key="index"><RouterLink :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}">{{tag.tagName}}</RouterLink></Tag>
+                    </p>
                 </div>
                 <Card>
                     <div v-html="blogInfo.blog.blogHtmlContent"></div>
                 </Card>
+                <div style="left: 50%">
+                    <div><Button style="background-color: red; color: #fff; border-radius: 20px" @click="collectBlog">收藏</Button></div>
+                    <p>点击收藏</p>
+                </div>
             </div>
             <Divider/>
             <div>
@@ -114,13 +121,16 @@
                 })
             },
             publishComment() {
+                var data = new FormData();
+                data.append('blogId', this.blogId);
+                data.append('userId', this.user.userId);
+                data.append('comment', this.comment);
                 this.$axios({
                     url: '/api/comment',
                     method: 'POST',
-                    data: {
-                        blogId: this.blogId,
-                        userId: this.user.userId,
-                        comment: this.comment
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                     }
                 }).then(res => {
                     if (res.data.status.code === 200) {
@@ -128,10 +138,34 @@
                             title: '发表成功'
                         });
                         this.comment = '';
+                        this.getBlogComments();
                     } else {
                         alert(res.data.status.msg);
                     }
                 }).catch(error => {
+                    alert(error);
+                })
+            },
+            collectBlog(){
+                var data = new FormData();
+                data.append('userId', this.user.userId);
+                data.append('blogId', this.blogId);
+                this.$axios({
+                    url: '/api/collection',
+                    method: 'POST',
+                    data: data,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+                    }
+                }).then(res=>{
+                    if (res.data.status.code === 200){
+                        this.$Notice.success({
+                            title: "收藏成功"
+                        });
+                    }else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error=>{
                     alert(error);
                 })
             }
