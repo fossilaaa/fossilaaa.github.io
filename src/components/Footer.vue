@@ -2,9 +2,15 @@
     <div>
         <Divider/>
         <ul class="bubble_footer_ul">
-            <li><Icon type="md-people"/><router-link to="/about" style="color: #000">关于我们</router-link></li>
-            <li><span><Icon type="logo-github"/></span><a href="https://github.com/gaoi311/bubble-fronted" style="color: #000">GitHub</a></li>
-            <li><Icon type="ios-link"/><a href="https://www.ustc.edu.cn/" style="color: #000">中国科大</a></li>
+            <li>
+                <Icon type="md-people"/>
+                <router-link to="/about" style="color: #000">关于我们</router-link>
+            </li>
+            <li><span><Icon type="logo-github"/></span><a href="https://github.com/gaoi311/bubble-fronted"
+                                                          style="color: #000">GitHub</a></li>
+            <li>
+                <Icon type="ios-link"/>
+                <a href="https://www.ustc.edu.cn/" style="color: #000">中国科大</a></li>
         </ul>
         <Divider/>
         <p class="bubble_footer_p">Copyright © 2020 USTC·IAT Bubble博客</p>

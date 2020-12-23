@@ -65,7 +65,7 @@ const routes = [
         }
     },
     {
-        path: '/search?key',
+        path: '/search',
         name: 'Search',
         component: () => import('../views/Search'),
         meta: {
@@ -124,12 +124,12 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.title){
+    if (to.meta.title) {
         document.title = to.meta.title;
     }
     if (to.matched.some(record => record.meta.requireAuth)) {
         if (!localStorage.getItem('user')) {
-            alert(to.fullPath);
+            // alert(to.fullPath);
             next({
                 path: '/login',
                 query: {

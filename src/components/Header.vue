@@ -82,7 +82,7 @@
                     alert(error);
                 })
             },
-            logout(){
+            logout() {
                 this.changeLogout();
                 this.$Notice.open({
                     title: '您已退出'
@@ -96,7 +96,6 @@
             }
         }
     }
-    ;
 </script>
 <style scoped>
 </style>

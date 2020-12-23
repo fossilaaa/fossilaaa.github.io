@@ -23,7 +23,7 @@ export default new Vuex.Store({
             localStorage.removeItem('user');
             localStorage.removeItem('userToken');
         },
-        changeUserInfo(state, {user}){
+        changeUserInfo(state, {user}) {
             state.user = user;
             localStorage.setItem('user', JSON.stringify(user));
         }

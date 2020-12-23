@@ -61,7 +61,7 @@
                     alert(error);
                 })
             },
-            deCollectBlog(blogId){
+            deCollectBlog(blogId) {
                 var data = new FormData();
                 data.append('userId', this.user.userId);
                 data.append('blogId', blogId);
@@ -84,7 +84,9 @@
             }
         },
         created() {
+            this.$Loading.start();
             this.getBlogCollections();
+            this.$Loading.finish();
         }
     }
 </script>

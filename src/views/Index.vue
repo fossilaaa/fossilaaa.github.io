@@ -8,7 +8,7 @@
         <Layout style="margin: 1% 10% 1% 10%">
             <Content style="max-width: 70%">
                 <!--                搜索框-->
-                <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签" style="max-width: 50%" @click="search" @keyup.enter="search"/>
+                <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签" @on-search="search"/>
                 <!--                筛选下拉框-->
                 <div style="display: inline">
                 </div>
@@ -21,7 +21,6 @@
                                 <p style="font-size: 24px">
                                     {{blog.blogTitle}}
                                 </p>
-                                <!--                            <p class="font_color" style="margin-top: 10px">{{blog.blogSummary}}</p>-->
                                 <Divider style="margin-top: 15px; margin-bottom: 15px"/>
                                 <p class="font_color" style="font-size: 10px">
                                     <Icon type="ios-person-outline"/>
@@ -69,7 +68,8 @@
                     </a>
                     <ul>
                         <li v-for="(user, index) in recommendedUsers" :key="index" style="list-style: none">
-                            <router-link :to="{name: 'BlogsOfAuthor', params:{userId: user.userId}}" style="color: red">{{ user.userName }}
+                            <router-link :to="{name: 'BlogsOfAuthor', params:{userId: user.userId}}" style="color: red">
+                                {{ user.userName }}
                             </router-link>
                             <span style="float: right">{{ user.userCollectionsCount }}收藏</span>
                         </li>
@@ -82,7 +82,11 @@
                         <Icon type="ios-flame"/>
                         热门标签
                     </p>
-                        <Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]"><router-link :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}" style="color: #999999">{{tag.tagName}}</router-link></Tag>
+                    <Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]">
+                        <router-link :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}" style="color: #999999">
+                            {{tag.tagName}}
+                        </router-link>
+                    </Tag>
                 </Card>
                 <BackTop></BackTop>
             </Sider>
@@ -190,7 +194,6 @@
                 }
 
                 this.randomRecommendedUsers = getArrayItems(this.recommendedUsers, 5);
-                console.log(this.randomRecommendedUsers);
             },
             getMostTags() {
                 this.$axios({
@@ -199,26 +202,27 @@
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.mostTags = res.data.data;
-                    }else{
+                    } else {
                         alert(res.data.status.msg);
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     alert(error);
                 })
             },
-            search(){
+            search() {
+                this.$router.push({name: 'Search', query: {key: this.key}})
             },
-            getIndexRandomBlogs(){
+            getIndexRandomBlogs() {
                 this.$axios({
                     url: '/api/randomblogs',
                     method: 'GET',
-                }).then(res=>{
-                    if (res.data.status.code === 200){
+                }).then(res => {
+                    if (res.data.status.code === 200) {
                         this.indexRandomBlogs = res.data.data;
-                    }else {
+                    } else {
                         alert(res.data.status.msg);
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     alert(error);
                 })
             }

@@ -28,7 +28,6 @@
                             <p style="font-size: 24px">
                                 {{blog.blogTitle}}
                             </p>
-<!--                            <p class="font_color" style="margin-top: 10px">{{blog.blogSummary}}</p>-->
                             <Divider style="margin-top: 15px; margin-bottom: 15px"/>
                             <p class="font_color" style="font-size: 10px">
                                 <Icon type="ios-person-outline"/>
@@ -66,7 +65,7 @@
                 recentBlogs: []
             }
         },
-        computed:{
+        computed: {
             ...mapState(['user'])
         },
         components: {

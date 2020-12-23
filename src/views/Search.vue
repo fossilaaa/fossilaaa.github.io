@@ -4,7 +4,29 @@
             <Head></Head>
         </Header>
         <Content>
-
+            <div>
+                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blog, index) in blogs"
+                      :key="index">
+                    <router-link :to="{name: 'Blog', params: {blogId: blog.blogId}}">
+                        <div>
+                            <p style="font-size: 24px">
+                                {{blog.blogTitle}}
+                            </p>
+                            <Divider style="margin-top: 15px; margin-bottom: 15px"/>
+                            <p class="font_color" style="font-size: 10px">
+                                <Icon type="ios-person-outline"/>
+                                {{blog.userName}}
+                                <Icon type="ios-eye-outline" style="margin-left: 10px"/>
+                                {{blog.blogViews}}
+                                <Icon type="ios-heart-outline" style="margin-left: 10px"/>
+                                {{blog.blogCollectionsCount}}
+                                <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
+                                {{blog.blogCommentsCount}}
+                            </p>
+                        </div>
+                    </router-link>
+                </Card>
+            </div>
         </Content>
         <Footer>
             <Foot></Foot>
@@ -18,27 +40,48 @@
 
     export default {
         name: "Search",
-        data(){
+        data() {
             return {
-
+                key: '',
+                blogs: []
             }
         },
-        computed:{
-
-        },
-        components:{
+        computed: {},
+        components: {
             Head,
             Foot
         },
-        methods:{
-
+        methods: {
+            getKey() {
+                this.key = this.$route.query.key;
+                alert(this.key);
+            },
+            getSearchBlogs() {
+                var data = new FormData();
+                data.append('key', this.key);
+                this.$axios({
+                    url: '/api/searchany',
+                    method: 'GET',
+                    params: {
+                        key: this.key
+                    }
+                }).then(res => {
+                    if (res.data.status.code === 200) {
+                        this.blogs = res.data.data;
+                    } else {
+                        alert(res.data.status.msg);
+                    }
+                }).catch(error => {
+                    alert(error);
+                })
+            }
         },
         created() {
+            this.$Loading.start();
+            this.getKey();
+            this.getSearchBlogs();
+            this.$Loading.finish();
         },
-        beforeRouteEnter(to, from, next)
-        {
-            alert(from.name);
-        }
     }
 </script>
 

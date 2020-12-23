@@ -8,10 +8,12 @@
                 <input type="hidden" v-model="formItem.userId">
                 <FormItem label="头像">
                     <Avatar :src="photoSrc(formItem.userAvatar)" style="width: 150px; height: 150px"/>
-                        <Upload action="" :before-upload="beforeUpload">
-                            <Button icon="ios-cloud-upload-outline">上传头像</Button>
-                        </Upload>
-                    <div v-if="avatarFile !== null"><Button type="text" @click="uploadAvatar">点击上传</Button></div>
+                    <Upload action="" :before-upload="beforeUpload">
+                        <Button icon="ios-cloud-upload-outline">上传头像</Button>
+                    </Upload>
+                    <div v-if="avatarFile !== null">
+                        <Button type="text" @click="uploadAvatar">点击上传</Button>
+                    </div>
                 </FormItem>
                 <FormItem label="用户名">
                     <Input v-model="formItem.userName"></Input>
@@ -115,7 +117,7 @@
                 this.avatarFile = file;
                 return false;
             },
-            uploadAvatar () {
+            uploadAvatar() {
                 this.loadingStatus = true;
                 var formData = new FormData();
                 formData.append("userAvatar", this.avatarFile);
@@ -128,7 +130,13 @@
                         this.$Notice.success({
                             title: "头像修改成功"
                         });
-                        this.changeUserInfo({user: {userId: this.user.userId, userName: this.user.userName, userAvatar: res.data.data.userAvatar}});
+                        this.changeUserInfo({
+                            user: {
+                                userId: this.user.userId,
+                                userName: this.user.userName,
+                                userAvatar: res.data.data.userAvatar
+                            }
+                        });
                     } else {
                         alert(res.data.status.msg);
                     }
@@ -155,7 +163,13 @@
                         this.$Notice.success({
                             title: "信息修改成功"
                         });
-                        this.changeUserInfo({user: {userId: this.user.userId, userName: this.fromItem.userName, userAvatar: this.user.userAvatar}});
+                        this.changeUserInfo({
+                            user: {
+                                userId: this.user.userId,
+                                userName: this.fromItem.userName,
+                                userAvatar: this.user.userAvatar
+                            }
+                        });
                     } else {
                         alert(res.data.status.msg);
                     }

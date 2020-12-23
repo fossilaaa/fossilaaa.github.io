@@ -22,14 +22,21 @@
                         {{blogInfo.blog.blogCommentsCount}}
                     </p>
                     <p>
-                        <Tag v-for="(tag, index) in blogInfo.blog.blogTags" style="margin-right: 10px" :key="index"><RouterLink :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}">{{tag.tagName}}</RouterLink></Tag>
+                        <Tag v-for="(tag, index) in blogInfo.blog.blogTags" style="margin-right: 10px" :key="index">
+                            <RouterLink :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}">{{tag.tagName}}
+                            </RouterLink>
+                        </Tag>
                     </p>
                 </div>
                 <Card>
                     <div v-html="blogInfo.blog.blogHtmlContent"></div>
                 </Card>
                 <div style="left: 50%">
-                    <div><Button style="background-color: red; color: #fff; border-radius: 20px" @click="collectBlog">收藏</Button></div>
+                    <div>
+                        <Button style="background-color: red; color: #fff; border-radius: 20px" @click="collectBlog">
+                            收藏
+                        </Button>
+                    </div>
                     <p>点击收藏</p>
                 </div>
             </div>
@@ -146,7 +153,7 @@
                     alert(error);
                 })
             },
-            collectBlog(){
+            collectBlog() {
                 var data = new FormData();
                 data.append('userId', this.user.userId);
                 data.append('blogId', this.blogId);
@@ -157,15 +164,15 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                     }
-                }).then(res=>{
-                    if (res.data.status.code === 200){
+                }).then(res => {
+                    if (res.data.status.code === 200) {
                         this.$Notice.success({
                             title: "收藏成功"
                         });
-                    }else {
+                    } else {
                         alert(res.data.status.msg);
                     }
-                }).catch(error=>{
+                }).catch(error => {
                     alert(error);
                 })
             }

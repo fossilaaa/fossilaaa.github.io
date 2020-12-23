@@ -5,25 +5,29 @@
         </Header>
         <Content>
             <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blogCollectionNotice, index) in blogCollectionNotices"
-                      :key="index">
-                        <div>
-                            <List item-layout="vertical">
-                                <ListItem>
-                                    <ListItemMeta :avatar="blogCollectionNotice.user.avatar" :title="blogCollectionNotice.user.userName"/>
-                                    {{ blogCollectionNotice.blog.blogTitle }}
-                                </ListItem>
-                            </List>
-                        </div>
-                </Card>
-            </div>
-            <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blogCollectionNotice, index) in blogCollectionNotices"
+                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer"
+                      v-for="(blogCollectionNotice, index) in blogCollectionNotices"
                       :key="index">
                     <div>
                         <List item-layout="vertical">
                             <ListItem>
-                                <ListItemMeta :avatar="blogCollectionNotice.user.avatar" :title="blogCollectionNotice.user.userName"/>
+                                <ListItemMeta :avatar="blogCollectionNotice.user.avatar"
+                                              :title="blogCollectionNotice.user.userName"/>
+                                {{ blogCollectionNotice.blog.blogTitle }}
+                            </ListItem>
+                        </List>
+                    </div>
+                </Card>
+            </div>
+            <div>
+                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer"
+                      v-for="(blogCollectionNotice, index) in blogCollectionNotices"
+                      :key="index">
+                    <div>
+                        <List item-layout="vertical">
+                            <ListItem>
+                                <ListItemMeta :avatar="blogCollectionNotice.user.avatar"
+                                              :title="blogCollectionNotice.user.userName"/>
                                 {{ blogCollectionNotice.blog.blogTitle }}
                             </ListItem>
                         </List>
@@ -44,7 +48,7 @@
 
     export default {
         name: "Notice",
-        data(){
+        data() {
             return {
                 blogCollectionNotices: [
                     {
@@ -126,14 +130,14 @@
                 ]
             }
         },
-        computed:{
+        computed: {
             ...mapState(['user'])
         },
-        components:{
+        components: {
             Head,
             Foot
         },
-        methods:{
+        methods: {
             getNotices() {
                 this.$axios({
                     url: '/api/unsawnotices/' + this.user.userId,
