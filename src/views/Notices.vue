@@ -6,14 +6,14 @@
         <Content style="margin: 1% 20% 1% 20%">
             <h2>评论通知</h2>
             <div>
-                <Card style="cursor: pointer" v-for="(blogCommentNotice, index) in blogCommentNotices"
+                <Card style="margin-top: 10px;cursor: pointer" v-for="(blogCommentNotice, index) in blogCommentNotices"
                       :key="index">
                     <div>
                         <List item-layout="vertical">
                             <ListItem>
                                 <ListItemMeta :avatar="photoSrc(blogCommentNotice.user.userAvatar)"
                                               :title="blogCommentNotice.user.userName + '   评论：' + blogCommentNotice.comment"/>
-                                {{ blogCommentNotice.blog.blogTitle }}
+                                <h3>{{ blogCommentNotice.blog.blogTitle }}</h3>
                             </ListItem>
                         </List>
                     </div>
@@ -21,14 +21,15 @@
             </div>
             <h2>收藏通知</h2>
             <div>
-                <Card style="cursor: pointer" v-for="(blogCollectionNotice, index) in blogCollectionNotices"
+                <Card style="margin-top: 10px;cursor: pointer"
+                      v-for="(blogCollectionNotice, index) in blogCollectionNotices"
                       :key="index">
                     <div>
                         <List item-layout="vertical">
                             <ListItem>
                                 <ListItemMeta :avatar="photoSrc(blogCollectionNotice.user.userAvatar)"
                                               :title="blogCollectionNotice.user.userName + '   收藏了您的博客！'"/>
-                                {{ blogCollectionNotice.blog.blogTitle }}
+                                <h3>{{ blogCollectionNotice.blog.blogTitle }}</h3>
                             </ListItem>
                         </List>
                     </div>

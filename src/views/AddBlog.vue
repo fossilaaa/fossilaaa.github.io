@@ -17,7 +17,11 @@
                     <Input v-model="blogTitle" placeholder="请输入博客标题" required></Input>
                 </FormItem>
                 <FormItem label="标签">
-                    <Tag checkable v-for="(tag, index) in tags" color="primary" :key="index">{{tag.tagName}}</Tag>
+                    <!--                    <Tag checkable v-for="(tag, index) in tags" color="primary" :key="index">{{tag.tagName}}</Tag>-->
+                    <Select v-model="blogTags" filterable multiple :max-tag-count="3"
+                            :max-tag-placeholder="maxTagPlaceholder" placeholder="选择标签">
+                        <Option v-for="tag in tags" :value="tag.tagId" :key="tag.tagId">{{ tag.tagName }}</Option>
+                    </Select>
                 </FormItem>
                 <FormItem label="分类">
                     <Col style="padding-right:10px">
@@ -37,14 +41,14 @@
 
 <script>
     import {mapState} from 'vuex';
-    import { mavonEditor } from 'mavon-editor';
+    import {mavonEditor} from 'mavon-editor';
     import 'mavon-editor/dist/css/index.css';
 
     export default {
         name: "AddBlog",
         data() {
             return {
-                codeStyle:'monokai-sublime',
+                codeStyle: 'monokai-sublime',
                 classifications: [],
                 tags: [],
 
@@ -73,18 +77,8 @@
         },
         computed: {
             ...mapState(['user']),
-            imgUrl() {
-                return imgUrl => {
-
-                    for (i = 0; i < imgUrl.length; i++) {
-                        alert(imgUrl[i][1]);
-                        imgUrl[i][1] = `${this.$settings.HOST}` + imgUrl[i][1]
-                    }
-                    return imgUrl;
-                }
-            },
         },
-        components:{
+        components: {
             mavonEditor
         },
         methods: {
@@ -183,7 +177,9 @@
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.isSaved = 1;
-                        this.$Message.success("保存成功");
+                        this.$Notice.success({
+                            title: "保存成功"
+                        });
                     } else {
                         alert(res.data.status.msg);
                     }
@@ -214,7 +210,9 @@
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.isSaved = 1;
-                        this.$Message.success("发表成功，即将跳回主页");
+                        this.$Notice.success({
+                            title: "发表成功，即将跳回主页"
+                        });
                         setTimeout(this.$router.push({name: 'Home', params: {userId: this.user.userId}}), 1000);
                     } else {
                         alert(res.data.status.msg);
@@ -236,15 +234,13 @@
                     url: '/api/classification',
                     method: 'POST',
                     data: data,
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-                    }
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.classifications.push({
                             classificationId: res.data.data.classificationId,
                             classificationName: res.data.data.classificationName,
                         })
+                        this.getClassificationsNames();
                         this.blogClassification = res.data.data.classificationId;
                     } else {
                         alert(res.data.status.msg);

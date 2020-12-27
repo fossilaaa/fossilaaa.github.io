@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '',
         userToken: localStorage.getItem('userToken') ? localStorage.getItem('UserToken') : '',
+        noticeUserCount: 0
     },
     mutations: {
         //用户登录，保存用户信息和token
@@ -26,6 +27,9 @@ export default new Vuex.Store({
         changeUserInfo(state, {user}) {
             state.user = user;
             localStorage.setItem('user', JSON.stringify(user));
+        },
+        changeNoticeUserCount(state){
+            state.noticeUserCount += 1;
         }
     },
     actions: {
@@ -39,6 +43,9 @@ export default new Vuex.Store({
         },
         changeUserInfo({commit}, {user}) {
             commit('changeUserInfo', {user: user});
+        },
+        changeNoticeUserCount({commit}){
+            commit('changeNoticeUserCount');
         }
     },
     modules: {}

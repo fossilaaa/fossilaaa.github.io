@@ -26,7 +26,7 @@
             </MenuItem>
             <MenuItem name="3-2" to="/collections">
                 <Icon type="md-heart"/>
-                收藏的文章
+                我的收藏
             </MenuItem>
             <MenuItem name="3-2" to="/notices">
                 <Icon type="md-at"/>
@@ -57,11 +57,10 @@
             return {
                 activeIndex: '1',
                 noticesCount: 0,
-                noticeUserCount: 0 // 通知用户的次数，仅通知用户一次
             }
         },
         computed: {
-            ...mapState(['user']),
+            ...mapState(['user', 'noticeUserCount']),
             photoSrc() {
                 return photoSrc => {
                     return `${this.$settings.HOST}${photoSrc}`;
@@ -69,7 +68,7 @@
             },
         },
         methods: {
-            ...mapActions(['changeLogout']),
+            ...mapActions(['changeLogout', 'changeNoticeUserCount']),
             changeIfNotices() {
                 this.$axios({
                     url: '/api/noticescount/' + this.user.userId,
@@ -77,6 +76,12 @@
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.noticesCount = res.data.data.noticesCount;
+                        if(this.noticesCount && (this.noticeUserCount < 1)){
+                            this.$Notice.info({
+                                title: '您有新通知！'
+                            })
+                        }
+                        this.changeNoticeUserCount();
                     } else {
                         alert(res.data.status.msg);
                     }
@@ -91,19 +96,10 @@
                 })
                 this.$router.push('/');
             },
-            async noticeUser(){
-                await this.changeIfNotices();
-                if(this.noticesCount && (this.noticeUserCount < 1)){
-                    this.$Notice.info({
-                        title: '您有新通知！'
-                    })
-                }
-                this.noticeUserCount += 1;
-            }
         },
         created() {
             if (this.user) {
-                this.noticeUser();
+                this.changeIfNotices();
             }
         }
     }

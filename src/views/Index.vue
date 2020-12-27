@@ -66,16 +66,14 @@
                         <Icon type="ios-film-outline"></Icon>
                         推荐作者
                     </p>
-                    <a href="#" slot="extra" @click.prevent="changeLimit">
-                        <Icon type="ios-loop-strong"></Icon>
-                        换一换
-                    </a>
                     <ul>
                         <li v-for="(user, index) in recommendedUsers" :key="index" style="list-style: none">
-                            <router-link :to="{name: 'BlogsOfAuthor', params:{userId: user.userId}}" style="color: red">
+                            <router-link :to="{name: 'BlogsOfAuthor', params:{authorId: user.userId}}" style="color: red">
                                 {{ user.userName }}
                             </router-link>
+                            <span></span>
                             <span style="float: right">{{ user.userCollectionsCount }}收藏</span>
+                            <span style="float: right">{{ user.userViews }}阅读&nbsp;</span>
                         </li>
                     </ul>
                 </Card>
@@ -172,27 +170,6 @@
                     alert(error);
                 })
             },
-            changeLimit() {
-                function getArrayItems(arr, num) {
-                    const temp_array = [];
-                    for (let index in arr) {
-                        temp_array.push(arr[index]);
-                    }
-                    const return_array = [];
-                    for (let i = 0; i < num; i++) {
-                        if (temp_array.length > 0) {
-                            const arrIndex = Math.floor(Math.random() * temp_array.length);
-                            return_array[i] = temp_array[arrIndex];
-                            temp_array.splice(arrIndex, 1);
-                        } else {
-                            break;
-                        }
-                    }
-                    return return_array;
-                }
-
-                this.randomRecommendedUsers = getArrayItems(this.recommendedUsers, 5);
-            },
             getMostTags() {
                 this.$axios({
                     url: '/api/mosttags',
@@ -228,7 +205,6 @@
                 this.getUserBlogDetailsInfo();
             }
             this.getRecommendedUsers();
-            this.changeLimit();
             this.getMostTags();
             this.getIndexRandomBlogs();
             this.$Loading.finish();

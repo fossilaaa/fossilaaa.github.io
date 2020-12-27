@@ -188,7 +188,7 @@
                         this.changeUserInfo({
                             user: {
                                 userId: this.user.userId,
-                                userName: this.fromItem.userName,
+                                userName: this.formItem.userName,
                                 userAvatar: this.user.userAvatar
                             }
                         });

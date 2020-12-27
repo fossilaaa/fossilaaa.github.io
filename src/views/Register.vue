@@ -114,36 +114,38 @@
     export default {
         name: "Register",
         data() {
-            // const validatePhone = (rule, value, callback) => {
-            //     if (value === '') {
-            //         callback(new Error('请输入手机号'));
-            //     } else {
-            //         if (!(/^1[3456789]\d{9}$/.test(value))){
-            //             callback(new Error('手机号格式不正确'));
-            //         }
-            //         callback();
-            //     }
-            // };
-            // const validatePass = (rule, value, callback) => {
-            //     if (value === '') {
-            //         callback(new Error('请输入密码'));
-            //     } else {
-            //         if (this.formInline.userPassword !== '') {
-            //             // 对第二个密码框单独验证
-            //             // this.$refs.formInline.validateField('passwdCheck');
-            //         }
-            //         callback();
-            //     }
-            // };
-            // const validatePassCheck = (rule, value, callback) => {
-            //     if (value === '') {
-            //         callback(new Error('请再次输入密码'));
-            //     } else if (value !== this.formInline.userPassword) {
-            //         callback(new Error('两次密码不一致'));
-            //     } else {
-            //         callback();
-            //     }
-            // };
+            const validatePhone = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入手机号'));
+                } else {
+                    if (!(/^1[3456789]\d{9}$/.test(value))) {
+                        callback(new Error('手机号格式不正确'));
+                    }
+                    callback();
+                }
+            };
+            const validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else if (!(/^(?![0-9]*$)(?![a-zA-Z]*$)[0-9A-Za-z]{6,30}$/.test(value))) {
+                    callback(new Error('密码至少6位且必须包含一位字母'))
+                } else {
+                    if (this.formInline.userPassword !== '') {
+                        // 对第二个密码框单独验证
+                        this.$refs.formInline.validateField('userRePassword');
+                    }
+                    callback();
+                }
+            };
+            const validatePassCheck = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.formInline.userPassword) {
+                    callback(new Error('两次密码不一致'));
+                } else {
+                    callback();
+                }
+            };
             return {
                 userAgreement: false,
                 privacyPolicy: false,
@@ -155,39 +157,39 @@
                 ruleInline: {
                     userPhone: [
                         {
-                            required: true,
-                            message: '此项为必填项',
-                            // validator: validatePhone,
+                            // required: true,
+                            // message: '此项为必填项',
+                            validator: validatePhone,
                             trigger: 'blur'
                         }
                     ],
                     userPassword: [
                         {
-                            required: true,
-                            message: '此项为必填项',
-                            // validator: validatePass,
+                            // required: true,
+                            // message: '此项为必填项',
+                            validator: validatePass,
                             trigger: 'blur'
                         },
-                        {
-                            type: 'string',
-                            min: 6,
-                            message: '密码不能少于6位',
-                            trigger: 'blur'
-                        }
+                        // {
+                        //     type: 'string',
+                        //     min: 6,
+                        //     message: '密码不能少于6位',
+                        //     trigger: 'blur'
+                        // }
                     ],
                     userRePassword: [
                         {
-                            required: true,
-                            message: '此项为必填项',
-                            // validator: validatePassCheck,
+                            // required: true,
+                            // message: '此项为必填项',
+                            validator: validatePassCheck,
                             trigger: 'blur'
                         },
-                        {
-                            type: 'string',
-                            min: 6,
-                            message: '密码不能少于6位',
-                            trigger: 'blur'
-                        }
+                        // {
+                        //     type: 'string',
+                        //     min: 6,
+                        //     message: '密码不能少于6位',
+                        //     trigger: 'blur'
+                        // }
                     ]
                 },
             }
