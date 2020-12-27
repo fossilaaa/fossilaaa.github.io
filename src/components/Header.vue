@@ -3,7 +3,8 @@
         <span style="float: left; margin-left: 1%">
             <Avatar shape="square"
                     src="/logo.jpg"
-                    size="large"/>
+                    size="large"
+                    @click.native="$router.push('/')"/>
         </span>
         <MenuItem name="1" to="/login" style="float: right" v-if="!user">
             <Icon type="md-log-in"/>
@@ -56,6 +57,7 @@
             return {
                 activeIndex: '1',
                 noticesCount: 0,
+                noticeUserCount: 0 // 通知用户的次数，仅通知用户一次
             }
         },
         computed: {
@@ -84,15 +86,24 @@
             },
             logout() {
                 this.changeLogout();
-                this.$Notice.open({
+                this.$Notice.success({
                     title: '您已退出'
                 })
                 this.$router.push('/');
+            },
+            async noticeUser(){
+                await this.changeIfNotices();
+                if(this.noticesCount && (this.noticeUserCount < 1)){
+                    this.$Notice.info({
+                        title: '您有新通知！'
+                    })
+                }
+                this.noticeUserCount += 1;
             }
         },
         created() {
             if (this.user) {
-                this.changeIfNotices();
+                this.noticeUser();
             }
         }
     }

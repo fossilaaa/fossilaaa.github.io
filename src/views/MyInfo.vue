@@ -3,42 +3,46 @@
         <Header>
             <Head></Head>
         </Header>
-        <Content>
-            <Form :model="formItem" :label-width="80">
-                <input type="hidden" v-model="formItem.userId">
-                <FormItem label="头像">
-                    <Avatar :src="photoSrc(formItem.userAvatar)" style="width: 150px; height: 150px"/>
-                    <Upload action="" :before-upload="beforeUpload">
-                        <Button icon="ios-cloud-upload-outline">上传头像</Button>
-                    </Upload>
-                    <div v-if="avatarFile !== null">
-                        <Button type="text" @click="uploadAvatar">点击上传</Button>
-                    </div>
-                </FormItem>
-                <FormItem label="用户名">
-                    <Input v-model="formItem.userName"></Input>
-                </FormItem>
-                <FormItem label="手机号码">
-                    <Input v-model="formItem.userPhone"></Input>
-                </FormItem>
-                <FormItem label="出生年月">
-                    <Row>
-                        <Col span="11">
-                            <DatePicker type="date" v-model="formItem.userBirth"></DatePicker>
-                        </Col>
-                    </Row>
-                </FormItem>
-                <FormItem label="性别">
-                    <RadioGroup v-model="formItem.userGender">
-                        <Radio label="男">男</Radio>
-                        <Radio label="女">女</Radio>
-                    </RadioGroup>
-                </FormItem>
-                <FormItem>
-                    <Button type="primary" @click="saveInfo">保存</Button>
-                    <Button style="margin-left: 8px">取消</Button>
-                </FormItem>
-            </Form>
+        <Content style="margin: 1% 20% 1% 20%">
+            <h2>我的信息</h2>
+            <Card>
+                <Form :model="formItem" :label-width="80" label-position="left">
+                    <input type="hidden" v-model="formItem.userId">
+                    <FormItem label="头像">
+                        <Avatar :src="photoSrc(formItem.userAvatar)" style="width: 150px; height: 150px"/>
+                        <Upload action="" :before-upload="beforeUpload" style="display: inline; margin-left: 5%"
+                                :format="['jpg','jpeg','png']" :max-size="1024" :on-format-error="handleFormatError"
+                                :on-exceeded-size="handleMaxSize">
+                            <Button v-if="avatarFile == null" type="success" icon="ios-cloud-upload-outline">上传头像
+                            </Button>
+                            <Button v-if="avatarFile != null" type="success" @click.stop="uploadAvatar">点击上传</Button>
+                            <p style="display: inline" v-if="avatarFile != null">&nbsp;{{avatarFile.name}}</p>
+                        </Upload>
+                    </FormItem>
+                    <FormItem label="用户名">
+                        <Input v-model="formItem.userName" style="width: 160px"></Input>
+                    </FormItem>
+                    <Divider/>
+                    <FormItem label="手机号码">
+                        <Input v-model="formItem.userPhone" style="width: 160px"></Input>
+                    </FormItem>
+                    <Divider/>
+                    <FormItem label="出生年月">
+                        <DatePicker type="date" style="width: 160px" v-model="formItem.userBirth"></DatePicker>
+                    </FormItem>
+                    <Divider/>
+                    <FormItem label="性别">
+                        <RadioGroup v-model="formItem.userGender">
+                            <Radio label="男">男</Radio>
+                            <Radio label="女">女</Radio>
+                        </RadioGroup>
+                    </FormItem>
+                    <Divider/>
+                    <FormItem>
+                        <Button type="success" shape="circle" size="large" @click.native="saveInfo">保存修改</Button>
+                    </FormItem>
+                </Form>
+            </Card>
         </Content>
         <Footer>
             <Foot></Foot>
@@ -113,14 +117,27 @@
                     alert(error);
                 })
             },
-            beforeUpload(file) {
-                this.avatarFile = file;
+            handleFormatError(avatarFile) {
+                this.$Notice.warning({
+                    title: '格式不正确',
+                    desc: '图片格式不正确，请选择jpg或png格式的图片！'
+                });
+            },
+            handleMaxSize(avatarFile) {
+                this.$Notice.warning({
+                    title: '超出大小限制',
+                    desc: '文件  ' + avatarFile.name + ' 太大，请上传小于1M的文件！'
+                });
+            },
+            beforeUpload(avatarFile) {
+                this.avatarFile = avatarFile;
                 return false;
             },
             uploadAvatar() {
                 this.loadingStatus = true;
                 var formData = new FormData();
                 formData.append("userAvatar", this.avatarFile);
+                this.avatarFile = null;
                 this.$axios({
                     url: '/api/avatar/' + this.user.userId,
                     method: 'PUT',
@@ -128,7 +145,7 @@
                 }).then(res => {
                     if (res.data.status.code === 200) {
                         this.$Notice.success({
-                            title: "头像修改成功"
+                            title: "头像修改成功！\n刷新试试吧！"
                         });
                         this.changeUserInfo({
                             user: {
@@ -137,6 +154,7 @@
                                 userAvatar: res.data.data.userAvatar
                             }
                         });
+                        // this.getInfo();
                     } else {
                         alert(res.data.status.msg);
                     }
@@ -145,12 +163,15 @@
                 })
             },
             saveInfo() {
+                // alert('111');
                 var data = new FormData();
                 data.append('userId', this.formItem.userId);
                 data.append('userName', this.formItem.userName);
-                data.append('userPhone', this.formInline.userPhone);
+                data.append('userPhone', this.formItem.userPhone);
                 data.append('userGender', this.formItem.userGender);
+                // alert('444');
                 data.append('userBirth', this.jsDate2JavaDate(this.formItem.userBirth));
+                // alert('222');
                 this.$axios({
                     url: '/api/myinfo/' + this.user.userId,
                     method: 'PUT',
@@ -159,6 +180,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                     }
                 }).then(res => {
+                    // alert('333');
                     if (res.data.status.code === 200) {
                         this.$Notice.success({
                             title: "信息修改成功"
@@ -179,7 +201,9 @@
             }
         },
         created() {
+            this.$Loading.start();
             this.getInfo();
+            this.$Loading.finish();
         }
     }
 </script>

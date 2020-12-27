@@ -81,7 +81,7 @@ const routes = [
         }
     },
     {
-        path: '/blogsofauthor/:userId',
+        path: '/blogsofauthor/:authorId',
         name: 'BlogsOfAuthor',
         component: () => import('../views/BlogsOfAuthor'),
         meta: {

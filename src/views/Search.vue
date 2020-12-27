@@ -3,31 +3,35 @@
         <Header>
             <Head></Head>
         </Header>
-        <Content>
+        <Content style="margin: 1% 20% 1% 20%">
+            <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签"
+                   @on-search="getSearchBlogs"/>
             <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer" v-for="(blog, index) in blogs"
-                      :key="index">
-                    <router-link :to="{name: 'Blog', params: {blogId: blog.blogId}}">
-                        <div>
-                            <p style="font-size: 24px">
-                                {{blog.blogTitle}}
-                            </p>
-                            <Divider style="margin-top: 15px; margin-bottom: 15px"/>
-                            <p class="font_color" style="font-size: 10px">
-                                <Icon type="ios-person-outline"/>
-                                {{blog.userName}}
-                                <Icon type="ios-eye-outline" style="margin-left: 10px"/>
-                                {{blog.blogViews}}
-                                <Icon type="ios-heart-outline" style="margin-left: 10px"/>
-                                {{blog.blogCollectionsCount}}
-                                <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
-                                {{blog.blogCommentsCount}}
-                            </p>
-                        </div>
-                    </router-link>
+                <Card style="margin-top: 10px" v-for="(blog, index) in blogs" :key="index">
+                    <div>
+                        <h2 style="cursor: pointer":class="{title_color: ai === index}" @mouseover="ai = index" @mouseleave="ai = -1" @click="$router.push({name: 'Blog', params: {blogId: blog.blogId}})">
+                            {{blog.blogTitle}}
+                        </h2>
+                        <Divider style="margin-top: 15px; margin-bottom: 15px"/>
+                        <p class="font_color" style="font-size: 10px">
+                            <Icon type="md-person"/>
+                            <span style="cursor: pointer" @click="$router.push({name: 'BlogsOfAuthor', params: {authorId: blog.userId}})">{{blog.userName}}</span>
+                            <Icon type="ios-eye-outline" style="margin-left: 10px"/>
+                            {{blog.blogViews}}
+                            <Icon type="ios-heart-outline" style="margin-left: 10px"/>
+                            {{blog.blogCollectionsCount}}
+                            <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
+                            {{blog.blogCommentsCount}}
+                            <Tag style="cursor: pointer" type="border" v-for="(tag, index1) in blog.blogTags"
+                                 @click.native="$router.push({name: 'BlogsOfTag', params: {tagId: tag.tagId}})">
+                                {{tag.tagName}}
+                            </Tag>
+                        </p>
+                    </div>
                 </Card>
             </div>
         </Content>
+        <BackTop></BackTop>
         <Footer>
             <Foot></Foot>
         </Footer>
@@ -42,6 +46,7 @@
         name: "Search",
         data() {
             return {
+                ai: -1,
                 key: '',
                 blogs: []
             }
@@ -54,7 +59,6 @@
         methods: {
             getKey() {
                 this.key = this.$route.query.key;
-                alert(this.key);
             },
             getSearchBlogs() {
                 var data = new FormData();
@@ -86,5 +90,7 @@
 </script>
 
 <style scoped>
-
+    .title_color {
+        color: #2D8cF0;
+    }
 </style>

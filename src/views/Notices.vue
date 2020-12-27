@@ -3,31 +3,31 @@
         <Header>
             <Head></Head>
         </Header>
-        <Content>
+        <Content style="margin: 1% 20% 1% 20%">
+            <h2>评论通知</h2>
             <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer"
-                      v-for="(blogCollectionNotice, index) in blogCollectionNotices"
+                <Card style="cursor: pointer" v-for="(blogCommentNotice, index) in blogCommentNotices"
                       :key="index">
                     <div>
                         <List item-layout="vertical">
                             <ListItem>
-                                <ListItemMeta :avatar="blogCollectionNotice.user.avatar"
-                                              :title="blogCollectionNotice.user.userName"/>
-                                {{ blogCollectionNotice.blog.blogTitle }}
+                                <ListItemMeta :avatar="photoSrc(blogCommentNotice.user.userAvatar)"
+                                              :title="blogCommentNotice.user.userName + '   评论：' + blogCommentNotice.comment"/>
+                                {{ blogCommentNotice.blog.blogTitle }}
                             </ListItem>
                         </List>
                     </div>
                 </Card>
             </div>
+            <h2>收藏通知</h2>
             <div>
-                <Card style="width: 600px; margin-bottom: 20px;cursor: pointer"
-                      v-for="(blogCollectionNotice, index) in blogCollectionNotices"
+                <Card style="cursor: pointer" v-for="(blogCollectionNotice, index) in blogCollectionNotices"
                       :key="index">
                     <div>
                         <List item-layout="vertical">
                             <ListItem>
-                                <ListItemMeta :avatar="blogCollectionNotice.user.avatar"
-                                              :title="blogCollectionNotice.user.userName"/>
+                                <ListItemMeta :avatar="photoSrc(blogCollectionNotice.user.userAvatar)"
+                                              :title="blogCollectionNotice.user.userName + '   收藏了您的博客！'"/>
                                 {{ blogCollectionNotice.blog.blogTitle }}
                             </ListItem>
                         </List>
@@ -35,6 +35,7 @@
                 </Card>
             </div>
         </Content>
+        <BackTop></BackTop>
         <Footer>
             <Foot></Foot>
         </Footer>
@@ -50,88 +51,17 @@
         name: "Notice",
         data() {
             return {
-                blogCollectionNotices: [
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-
-                    },
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-
-                    },
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-                    }
-                ],
-                blogCommentNotices: [
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-                        comment: "写得不错"
-
-                    },
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-                        comment: "写得不错"
-
-                    },
-                    {
-                        user: {
-                            userId: 1,
-                            userName: 'a13912345678',
-                            userAvatar: 'http:/dfsdfsdf.jpg'
-                        },
-                        blog: {
-                            blogId: 1,
-                            blogTitle: 'Python'
-                        },
-                        comment: "写得不错"
-
-                    },
-                ]
+                blogCollectionNotices: null,
+                blogCommentNotices: null
             }
         },
         computed: {
-            ...mapState(['user'])
+            ...mapState(['user']),
+            photoSrc() {
+                return photoSrc => {
+                    return `${this.$settings.HOST}${photoSrc}`;
+                }
+            },
         },
         components: {
             Head,
@@ -155,7 +85,9 @@
             }
         },
         created() {
+            this.$Loading.start();
             this.getNotices();
+            this.$Loading.finish();
         }
     }
 </script>

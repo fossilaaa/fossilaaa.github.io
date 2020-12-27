@@ -8,32 +8,30 @@
         <Layout style="margin: 1% 10% 1% 10%">
             <Content style="max-width: 70%">
                 <!--                搜索框-->
-                <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签" @on-search="search"/>
-                <!--                筛选下拉框-->
-                <div style="display: inline">
-                </div>
+                <Input search v-model="key" size="large" placeholder="搜索博客 作者 标签" @on-search="$router.push({name: 'Search', query: {key: key}})"/>
                 <!--                博客列表卡片-->
                 <div>
-                    <Card style="margin-top: 10px" v-for="(blog, index) in indexRandomBlogs"
-                          :key="index">
-                        <router-link :to="{name: 'Blog', params: {blogId: blog.blogId}}">
-                            <div>
-                                <p style="font-size: 24px">
-                                    {{blog.blogTitle}}
-                                </p>
-                                <Divider style="margin-top: 15px; margin-bottom: 15px"/>
-                                <p class="font_color" style="font-size: 10px">
-                                    <Icon type="ios-person-outline"/>
-                                    {{blog.userName}}
-                                    <Icon type="ios-eye-outline" style="margin-left: 10px"/>
-                                    {{blog.blogViews}}
-                                    <Icon type="ios-heart-outline" style="margin-left: 10px"/>
-                                    {{blog.blogCollectionsCount}}
-                                    <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
-                                    {{blog.blogCommentsCount}}
-                                </p>
-                            </div>
-                        </router-link>
+                    <Card style="margin-top: 10px" v-for="(blog, index) in indexRandomBlogs" :key="index">
+                        <div>
+                            <h2 style="cursor: pointer":class="{title_color: ai === index}" @mouseover="ai = index" @mouseleave="ai = -1" @click="$router.push({name: 'Blog', params: {blogId: blog.blogId}})">
+                                {{blog.blogTitle}}
+                            </h2>
+                            <Divider style="margin-top: 15px; margin-bottom: 15px"/>
+                            <p class="font_color" style="font-size: 10px">
+                                <Icon type="md-person"/>
+                                <span style="cursor: pointer" @click="$router.push({name: 'BlogsOfAuthor', params: {authorId: blog.userId}})">{{blog.userName}}</span>
+                                <Icon type="ios-eye-outline" style="margin-left: 10px"/>
+                                {{blog.blogViews}}
+                                <Icon type="ios-heart-outline" style="margin-left: 10px"/>
+                                {{blog.blogCollectionsCount}}
+                                <Icon type="ios-chatbubbles-outline" style="margin-left: 10px"/>
+                                {{blog.blogCommentsCount}}
+                                <Tag style="cursor: pointer" type="border" v-for="(tag, index1) in blog.blogTags"
+                                     @click.native="$router.push({name: 'BlogsOfTag', params: {tagId: tag.tagId}})">
+                                    {{tag.tagName}}
+                                </Tag>
+                            </p>
+                        </div>
                     </Card>
                 </div>
             </Content>
@@ -55,9 +53,15 @@
                         </li>
                     </ul>
                 </Card>
-                <Divider/>
                 <!--                推荐作者卡片-->
-                <Card>
+                <Card v-if="!user">
+                    <p slot="title">
+                        <Icon type="md-heart-outline" />
+                        自我推荐
+                    </p>
+                    嘿！小老弟，站着干啥！快来加入我们吧！
+                </Card>
+                <Card style="margin-top: 30px;">
                     <p slot="title">
                         <Icon type="ios-film-outline"></Icon>
                         推荐作者
@@ -75,14 +79,13 @@
                         </li>
                     </ul>
                 </Card>
-                <Divider/>
                 <!--                标签展示-->
-                <Card>
+                <Card style="margin-top: 30px;">
                     <p slot="title">
                         <Icon type="ios-flame"/>
                         热门标签
                     </p>
-                    <Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[1]">
+                    <Tag v-for="(tag, index) in mostTags" :key="index" :color="tagColors[index * 17 % 15]">
                         <router-link :to="{name: 'BlogsOfTag', params: {tagId: tag.tagId}}" style="color: #999999">
                             {{tag.tagName}}
                         </router-link>
@@ -108,6 +111,7 @@
         name: "Index",
         data() {
             return {
+                ai: -1,
                 recommendedUsers: [],
                 randomRecommendedUsers: [],
                 userBlogDetailsInfo: [],
@@ -134,12 +138,6 @@
         },
         computed: {
             ...mapState(['user', 'userToken']),
-            // randomColor: function(index) {
-            //     console.log(index);
-            //     var index1 = index * Math.random() % this.tagColors.length;
-            //     alert(index1);
-            //     return this.tagColors[index1];
-            // }
         },
         components: {
             Head,
@@ -209,9 +207,6 @@
                     alert(error);
                 })
             },
-            search() {
-                this.$router.push({name: 'Search', query: {key: this.key}})
-            },
             getIndexRandomBlogs() {
                 this.$axios({
                     url: '/api/randomblogs',
@@ -243,5 +238,8 @@
 <style scoped>
     .font_color {
         color: #8B8989;
+    }
+    .title_color {
+        color: #2D8cF0;
     }
 </style>

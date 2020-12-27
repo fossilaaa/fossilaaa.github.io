@@ -5,7 +5,7 @@
             <button @click="saveBlog">保存</button>
             <button @click="chooseAttr">发表</button>
             <mavon-editor ref="md" @imgAdd="addImg" @imgDel="delImg" @save="saveBlog" @change="changeBlog"
-                          style="z-index: 0"></mavon-editor>
+                          style="z-index: 0" :codeStyle="codeStyle" :ishljs="true"></mavon-editor>
         </Content>
         <Modal
                 v-model="modal"
@@ -31,16 +31,20 @@
                 </FormItem>
             </Form>
         </Modal>
+        <BackTop></BackTop>
     </Layout>
 </template>
 
 <script>
     import {mapState} from 'vuex';
+    import { mavonEditor } from 'mavon-editor';
+    import 'mavon-editor/dist/css/index.css';
 
     export default {
         name: "AddBlog",
         data() {
             return {
+                codeStyle:'monokai-sublime',
                 classifications: [],
                 tags: [],
 
@@ -79,6 +83,9 @@
                     return imgUrl;
                 }
             },
+        },
+        components:{
+            mavonEditor
         },
         methods: {
             getClassificationsNames() {
